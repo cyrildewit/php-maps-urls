@@ -1,6 +1,6 @@
 # PHP Google Maps URLs
 
-This package allows you to generate Google Maps URLs.
+This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide).
 
 Here's a quick example:
 
