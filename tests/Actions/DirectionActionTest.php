@@ -15,7 +15,7 @@ use Exception;
 use PHPUnit\Framework\TestCase;
 use CyrildeWit\MapsUrls\Actions\DirectionAction;
 
-class SearchActionTest extends TestCase
+class DirectionActionTest extends TestCase
 {
     public function testGetParameters()
     {
