@@ -29,18 +29,6 @@ class SearchAction implements ActionInterface
     protected $placeId;
 
     /**
-     * Create a new Search Action instance.
-     *
-     * @param  string  $query
-     * @param  string  $placeId
-     */
-    public function __construct(string $query = null)
-    {
-        $this->query = $query;
-        $this->placeId = $placeId;
-    }
-
-    /**
      * Get the action's parameters.
      *
      * @return array
@@ -81,19 +69,6 @@ class SearchAction implements ActionInterface
     public function getPlaceId(): string
     {
         return $this->placeId;
-    }
-
-    /**
-     * Set the search action's endpoint.
-     *
-     * @param  string  $endpoint
-     * @return $this
-     */
-    public function setEndpoint(string $endpoint)
-    {
-        $this->endpoint = $endpoint;
-
-        return $this;
     }
 
     /**
