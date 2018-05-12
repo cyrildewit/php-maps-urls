@@ -26,7 +26,7 @@ class SearchAction implements ActionInterface
     /**
      * @var string
      */
-    protected $placeId;
+    protected $queryPlaceId;
 
     /**
      * Get the action's parameters.
@@ -37,12 +37,12 @@ class SearchAction implements ActionInterface
     {
         return [
             'query' => $this->query,
-            'query_place_id' => $this->placeId,
+            'query_place_id' => $this->queryPlaceId,
         ];
     }
 
     /**
-     * Get the action endpoint.
+     * Get the search action's endpoint.
      *
      * @return string
      */
@@ -52,7 +52,7 @@ class SearchAction implements ActionInterface
     }
 
     /**
-     * Get the action endpoint.
+     * Get the search action's query.
      *
      * @return string
      */
@@ -62,13 +62,13 @@ class SearchAction implements ActionInterface
     }
 
     /**
-     * Get the action endpoint.
+     * Get the search action's query place id.
      *
      * @return string
      */
-    public function getPlaceId(): string
+    public function getQueryPlaceId(): string
     {
-        return $this->placeId;
+        return $this->queryPlaceId;
     }
 
     /**
@@ -93,20 +93,20 @@ class SearchAction implements ActionInterface
      */
     public function setCoordinates(float $lat, float $lng)
     {
-        $this->query = "$lat,$lng";
+        $this->query = $lat.','.$lng;
 
         return $this;
     }
 
     /**
-     * Set the search action's place id.
+     * Set the search action's query place id.
      *
      * @param  string $placeId
      * @return $this
      */
-    public function setPlaceId(string $placeId)
+    public function setQueryPlaceId(string $placeId)
     {
-        $this->placeId = $placeId;
+        $this->queryPlaceId = $placeId;
 
         return $this;
     }
