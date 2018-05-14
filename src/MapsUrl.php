@@ -45,10 +45,9 @@ class MapsUrl
      */
     public function getUrl()
     {
-        $parameters = array_merge(['api' => $this->apiVersion], $this->action->getParameters());
-        $queryString = http_build_query($parameters);
+        $parameters = $this->formatQueryString($this->collectParameters());
 
-        return $this->baseUrl.'/'.$this->action->getEndpoint().'/?'.$queryString;
+        return $this->baseUrl.'/'.$this->action->getEndpoint().'/?'.$parameters;
     }
 
     /**
@@ -77,23 +76,24 @@ class MapsUrl
         return $this;
     }
 
-    // public static function search()
-    // {
-    //     // return s
-    // }
+    /**
+     * Collect all parameters.
+     *
+     * @return array
+     */
+    protected function collectParameters()
+    {
+        return array_merge(['api' => $this->apiVersion], $this->action->getParameters());
+    }
 
-    // public static function direction()
-    // {
-    //     // return s
-    // }
-
-    // public static function displayMap()
-    // {
-    //     // return s
-    // }
-
-    // public static function displayStreetViewPanorama()
-    // {
-    //     // return s
-    // }
+    /**
+     * Format a parameter list to a query string.
+     *
+     * @param  array  $parameters
+     * @return array
+     */
+    protected function formatQueryString(array $parameters): string
+    {
+        return http_build_query($parameters);
+    }
 }
