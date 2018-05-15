@@ -16,7 +16,7 @@ class SearchAction implements ActionInterface
     /**
      * @var string
      */
-    protected $endpoint = 'search';
+    protected $endpoint = 'search/';
 
     /**
      * @var string
