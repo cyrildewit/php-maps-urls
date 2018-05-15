@@ -170,11 +170,9 @@ class DisplayMapAction implements ActionInterface
 
         // Since this parameter is optional and optional, we don't have to add
         // it to the URL
-        if ($basemap === 'none') {
-            return $this;
+        if ($basemap !== 'none') {
+            $this->basemap = $basemap;
         }
-
-        $this->basemap = $basemap;
 
         return $this;
     }
@@ -193,11 +191,9 @@ class DisplayMapAction implements ActionInterface
 
         // Since this parameter is optional and optional, we don't have to add
         // it to the URL
-        if ($layer === 'none') {
-            return $this;
+        if ($layer !== 'none') {
+            $this->layer = $layer;
         }
-
-        $this->layer = $layer;
 
         return $this;
     }
