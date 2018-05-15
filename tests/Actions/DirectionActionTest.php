@@ -41,27 +41,6 @@ class DirectionActionTest extends TestCase
         ], $action->getParameters());
     }
 
-    // public function testSetOrigin()
-    // {
-    //     $action = (new DirectionAction())->setOrigin('Nederland Amsterdam');
-
-    //     $this->assertEquals('Nederland Amsterdam', $action->getOrigin());
-    // }
-
-    // public function testSetDestination()
-    // {
-    //     $action = (new DirectionAction())->setDestination('Nederland Amsterdam');
-
-    //     $this->assertEquals('Nederland Amsterdam', $action->getDestination());
-    // }
-
-    // public function testSetDestinationPlaceId()
-    // {
-    //     $action = (new DirectionAction())->setDestinationPlaceId('abcdefghijklmnopqrstuvwxyz');
-
-    //     $this->assertEquals('abcdefghijklmnopqrstuvwxyz', $action->getDestinationPlaceId());
-    // }
-
     public function testSetTravelmode()
     {
         $action = (new DirectionAction())->setTravelmode('driving');
