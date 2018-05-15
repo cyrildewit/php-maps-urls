@@ -68,7 +68,7 @@ class DirectionAction implements ActionInterface
     protected $waypointPlaceIds;
 
     /**
-     * Get the action's parameters.
+     * Get the direction action's parameters.
      *
      * @return array
      */
