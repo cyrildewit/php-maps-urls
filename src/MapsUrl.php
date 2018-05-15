@@ -47,7 +47,7 @@ class MapsUrl
     {
         $parameters = $this->formatQueryString($this->collectParameters());
 
-        return $this->baseUrl.'/'.$this->action->getEndpoint().'/?'.$parameters;
+        return $this->baseUrl.'/'.$this->action->getEndpoint().'?'.$parameters;
     }
 
     /**
