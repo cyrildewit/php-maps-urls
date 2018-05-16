@@ -11,12 +11,12 @@ namespace CyrildeWit\MapsUrls;
  * file that was distributed with this source code.
  */
 
-class MapsUrl
+class UrlGenerator
 {
     /**
      * @var string
      */
-    protected $baseUrl = 'https://www.google.com/maps';
+    const BASE_URL = 'https://www.google.com/maps';
 
     /**
      * @var int|string
@@ -39,15 +39,16 @@ class MapsUrl
     }
 
     /**
-     * Generate the url and return it.
+     * Generate a url from an acton instance.
      *
      * @return string
      */
-    public function getUrl()
+    public function generate()
     {
-        $parameters = $this->formatQueryString($this->collectParameters());
+        $parameters = $this->collectParameters();
+        $queryString = $this->formatQueryString($parameters);
 
-        return $this->baseUrl.'/'.$this->action->getEndpoint().'?'.$parameters;
+        return self::BASE_URL.'/'.$this->action->getEndpoint().'?'.$queryString;
     }
 
     /**
@@ -81,9 +82,23 @@ class MapsUrl
      *
      * @return array
      */
-    protected function collectParameters()
+    protected function collectParameters(): array
     {
-        return array_merge(['api' => $this->apiVersion], $this->action->getParameters());
+        $actionParameters = $this->action->getParameters();
+
+        return array_merge($this->getDefaultParameters(), $actionParameters);
+    }
+
+    /**
+     * Get default parameters.
+     *
+     * @return array
+     */
+    protected function getDefaultParameters(): array
+    {
+        return [
+            'api' => $this->apiVersion,
+        ];
     }
 
     /**
