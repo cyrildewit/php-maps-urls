@@ -8,7 +8,8 @@ Here's a quick example:
 use CyrildeWit\MapsUrls\UrlGenerator;
 use CyrildeWit\MapsUrls\Actions\SearchAction;
 
-$searchAction = (new SearchAction())->setQuery('The Netherlands Amsterdam');
+$searchAction = (new SearchAction())
+    ->setQuery('The Netherlands Amsterdam');
 $searchUrl = (new UrlGenerator($searchAction))->getUrl();
 
 $directonAction = (new DirectionAction())
