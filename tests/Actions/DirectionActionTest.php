@@ -1,6 +1,6 @@
 <?php
 
-namespace CyrildeWit\MapsUrls\Tests;
+namespace CyrildeWit\MapsUrls\Tests\Actions;
 
 /*
  * This file is part of the Maps URLs package.
