@@ -16,7 +16,7 @@ class UrlGenerator
     /**
      * @var string
      */
-    const BASE_URL = 'https://www.google.com/maps';
+    const BASE_URL = 'https://www.google.com/maps/';
 
     /**
      * @var int|string
@@ -48,7 +48,7 @@ class UrlGenerator
         $parameters = $this->collectParameters();
         $queryString = $this->formatQueryString($parameters);
 
-        return self::BASE_URL.'/'.$this->action->getEndpoint().'?'.$queryString;
+        return self::BASE_URL.$this->action->getEndpoint().'?'.$queryString;
     }
 
     /**
