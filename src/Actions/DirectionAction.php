@@ -13,12 +13,26 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use Exception;
 
-class DirectionAction implements ActionInterface
+class DirectionAction extends AbstractAction
 {
     /**
      * @var string
      */
     protected $endpoint = 'dir';
+
+    /**
+     * @var array
+     */
+    protected $setters = [
+        'origin' => 'setOrigin',
+        'origin_place_id' => 'setOriginPlaceId',
+        'destination' => 'setDestination',
+        'destination_place_id' => 'setDestinationPlaceId',
+        'travelmode' => 'setTravelmode',
+        'dir_action' => 'setDirectionAction',
+        'waypoints' => 'setWaypoints',
+        'waypoint_place_ids' => 'setWaypointPlaceIds',
+    ];
 
     /**
      * @var array

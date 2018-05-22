@@ -11,12 +11,20 @@ namespace CyrildeWit\MapsUrls\Actions;
  * file that was distributed with this source code.
  */
 
-class SearchAction implements ActionInterface
+class SearchAction extends AbstractAction
 {
     /**
      * @var string
      */
     protected $endpoint = 'search/';
+
+    /**
+     * @var array
+     */
+    protected $setters = [
+        'query' => 'setQuery',
+        'query_place_id' => 'setQueryPlaceId',
+    ];
 
     /**
      * @var string

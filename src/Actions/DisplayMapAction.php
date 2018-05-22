@@ -21,6 +21,16 @@ class DisplayMapAction implements ActionInterface
     protected $endpoint = 'maps/@';
 
     /**
+     * @var array
+     */
+    protected $setters = [
+        'center' => 'setCenter',
+        'zoom' => 'setZoom',
+        'basemap' => 'setBasemap',
+        'layer' => 'setLayer',
+    ];
+
+    /**
      * Collection of supported basemaps.
      *
      * @var array

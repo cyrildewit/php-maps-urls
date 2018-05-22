@@ -13,12 +13,24 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use Exception;
 
-class DisplayStreetViewPanoramaAction implements ActionInterface
+class DisplayStreetViewPanoramaAction extends AbstractAction
 {
     /**
      * @var string
      */
-    protected $endpoint = '/@';
+    protected $endpoint = '@';
+
+    /**
+     * @var array
+     */
+    protected $setters = [
+        'map_action' => 'setQuery',
+        'viewpoint' => 'setViewpoint',
+        'pano' => 'setPano',
+        'heading' => 'setHeading',
+        'pitch' => 'setPitch',
+        'fov' => 'setFov',
+    ];
 
     /**
      * @var string
