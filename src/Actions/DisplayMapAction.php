@@ -13,7 +13,7 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use Exception;
 
-class DisplayMapAction implements ActionInterface
+class DisplayMapAction extends AbstractAction
 {
     /**
      * @var string
