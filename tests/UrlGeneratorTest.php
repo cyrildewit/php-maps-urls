@@ -12,14 +12,14 @@ namespace CyrildeWit\MapsUrls\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
-use CyrildeWit\MapsUrls\Actions\ActionInterface;
+use CyrildeWit\MapsUrls\Actions\AbstractAction;
 use CyrildeWit\MapsUrls\UrlGenerator;
 
 class UrlGeneratorTest extends TestCase
 {
     public function testGenerate()
     {
-        $urlGenerator = new UrlGenerator(new class implements ActionInterface {
+        $urlGenerator = new UrlGenerator(new class extends AbstractAction {
             public function getEndpoint(): string
             {
                 return 'search/';
