@@ -178,8 +178,8 @@ class DisplayMapAction extends AbstractAction
             throw new Exception('Invalid basemap: '.$basemap);
         }
 
-        // Since this parameter is optional and optional, we don't have to add
-        // it to the URL
+        // Leave it empty if it's equal to none, since this parameter is
+        // optional.
         if ($basemap !== 'none') {
             $this->basemap = $basemap;
         }
@@ -199,8 +199,8 @@ class DisplayMapAction extends AbstractAction
             throw new Exception('Invalid layer: '.$layer);
         }
 
-        // Since this parameter is optional and optional, we don't have to add
-        // it to the URL
+        // Leave it empty if it's equal to none, since this parameter is
+        // optional.
         if ($layer !== 'none') {
             $this->layer = $layer;
         }
