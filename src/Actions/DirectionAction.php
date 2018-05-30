@@ -297,7 +297,7 @@ class DirectionAction extends AbstractAction
      */
     public function setWaypointPlaceIds(array $placeIds)
     {
-        $this->waypointPlaceIds =  $placeIds;
+        $this->waypointPlaceIds = $placeIds;
 
         return $this;
     }

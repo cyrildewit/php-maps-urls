@@ -12,8 +12,8 @@ namespace CyrildeWit\MapsUrls\Tests;
  */
 
 use PHPUnit\Framework\TestCase;
-use CyrildeWit\MapsUrls\Actions\AbstractAction;
 use CyrildeWit\MapsUrls\UrlGenerator;
+use CyrildeWit\MapsUrls\Actions\AbstractAction;
 
 class UrlGeneratorTest extends TestCase
 {
