@@ -11,7 +11,7 @@ namespace CyrildeWit\MapsUrls\Actions;
  * file that was distributed with this source code.
  */
 
-class AbstractAction
+abstract class AbstractAction
 {
     /**
      * @var array
@@ -38,8 +38,6 @@ class AbstractAction
                 }
 
                 call_user_func_array([$action, $setter], $value);
-
-                // $action->$setter($value);
             }
         }
 
@@ -51,18 +49,12 @@ class AbstractAction
      *
      * @return array
      */
-    public function getParameters(): array
-    {
-        return [];
-    }
+    abstract public function getParameters(): array;
 
     /**
      * Get the search action's endpoint.
      *
      * @return string
      */
-    public function getEndpoint(): string
-    {
-        return '';
-    }
+    abstract public function getEndpoint(): string;
 }
