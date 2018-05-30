@@ -198,8 +198,6 @@ class DirectionAction extends AbstractAction
      */
     public function setOrigin(string $origin)
     {
-        // perform changes....
-
         $this->origin = $origin;
 
         return $this;
