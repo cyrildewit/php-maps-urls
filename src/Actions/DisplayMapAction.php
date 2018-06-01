@@ -18,7 +18,7 @@ class DisplayMapAction extends AbstractAction
     /**
      * @var string
      */
-    protected $endpoint = 'maps/@';
+    protected $endpoint = '@';
 
     /**
      * @var array
