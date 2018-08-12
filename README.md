@@ -56,3 +56,13 @@ composer require cyrildewit/php-maps-urls
 ## Usage
 
 In the following sections, you will find information about the usage of this package.
+
+## Credits
+
+* **Cyril de Wit** - _Initial work_ - [cyrildewit](https://github.com/cyrildewit)
+
+See also the list of [contributors](https://github.com/cyrildewit/perceptor/graphs/contributors) who participated in this project.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details.
