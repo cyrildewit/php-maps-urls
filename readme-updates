@@ -1,0 +1,32 @@
+### Search
+
+> launch a Google Map that displays a pin for a specific place, or perform a general search and launch a map to display the results: `https://www.google.com/maps/search/?api=1&parameters`
+> *https://developers.google.com/maps/documentation/urls/guide*
+
+First you will have to create a search action object.
+
+```php
+$searchAction = (new SearchAction());
+```
+
+Now you can configure it with the following setters:
+
+#### `setQuery(string $query)`
+
+Set the query parameter with the given value.
+
+#### `setCoordinates(float $lat, float $lng)`
+
+Set the query value with the given coordinates.
+
+*For example:* `setCoordinates(20, 40)` will be converted to `'20,40'`.
+
+#### `setQueryPlaceId(string $placeId)`
+
+Set the query place id with the given value.
+
+After you've done that, you can pass it into the `UrlGenerator` class and call the `getUrl` method on it.
+
+```php
+$searchUrl = (new UrlGenerator($searchAction))->getUrl();
+```
