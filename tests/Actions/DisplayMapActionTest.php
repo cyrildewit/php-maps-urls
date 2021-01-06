@@ -11,9 +11,9 @@ namespace CyrildeWit\MapsUrls\Tests\Actions;
  * file that was distributed with this source code.
  */
 
+use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
 
 class DisplayMapActionTest extends TestCase
 {
