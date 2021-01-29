@@ -11,9 +11,9 @@ namespace CyrildeWit\MapsUrls\Tests\Actions;
  * file that was distributed with this source code.
  */
 
+use CyrildeWit\MapsUrls\Actions\DirectionAction;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use CyrildeWit\MapsUrls\Actions\DirectionAction;
 
 class DirectionActionTest extends TestCase
 {

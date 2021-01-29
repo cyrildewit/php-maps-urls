@@ -11,9 +11,9 @@ namespace CyrildeWit\MapsUrls\Tests\Actions;
  * file that was distributed with this source code.
  */
 
+use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
 use Exception;
 use PHPUnit\Framework\TestCase;
-use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
 
 class DisplayStreetViewPanoramaTest extends TestCase
 {

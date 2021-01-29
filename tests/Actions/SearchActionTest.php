@@ -11,8 +11,8 @@ namespace CyrildeWit\MapsUrls\Tests\Actions;
  * file that was distributed with this source code.
  */
 
-use PHPUnit\Framework\TestCase;
 use CyrildeWit\MapsUrls\Actions\SearchAction;
+use PHPUnit\Framework\TestCase;
 
 class SearchActionTest extends TestCase
 {
