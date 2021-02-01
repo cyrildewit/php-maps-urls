@@ -19,8 +19,8 @@ class SearchAction extends AbstractAction
     public function getParameters(): array
     {
         return [
-            'query' => $this->query,
-            'query_place_id' => $this->queryPlaceId,
+            'query' => $this->getQuery(),
+            'query_place_id' => $this->getQueryPlaceId(),
         ];
     }
 
