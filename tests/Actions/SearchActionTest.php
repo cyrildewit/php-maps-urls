@@ -7,6 +7,13 @@ use PHPUnit\Framework\TestCase;
 
 class SearchActionTest extends TestCase
 {
+    public function testGetEndpoint()
+    {
+        $action = new SearchAction();
+
+        $this->assertEquals(SearchAction::ENDPOINT, $action->getEndpoint());
+    }
+
     public function testGetParameters()
     {
         $action = (new SearchAction())

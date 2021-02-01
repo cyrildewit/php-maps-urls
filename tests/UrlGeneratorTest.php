@@ -30,4 +30,45 @@ class UrlGeneratorTest extends TestCase
             $urlGenerator->generate()
         );
     }
+
+    public function testSetAction()
+    {
+        $urlGenerator = new UrlGenerator(new class extends AbstractAction {
+            public function getEndpoint(): string
+            {
+                return 'endpoint/';
+            }
+
+            public function getParameters(): array
+            {
+                return [
+                    'test' => 'before',
+                ];
+            }
+        });
+
+        $this->assertEquals(
+            'https://www.google.com/maps/endpoint/?api=1&test=before',
+            $urlGenerator->generate()
+        );
+
+        $urlGenerator->setAction(new class extends AbstractAction {
+            public function getEndpoint(): string
+            {
+                return 'endpoint/';
+            }
+
+            public function getParameters(): array
+            {
+                return [
+                    'test' => 'after',
+                ];
+            }
+        });
+
+        $this->assertEquals(
+            'https://www.google.com/maps/endpoint/?api=1&test=after',
+            $urlGenerator->generate()
+        );
+    }
 }

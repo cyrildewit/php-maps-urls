@@ -10,6 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 class DisplayStreetViewPanoramaTest extends TestCase
 {
+    public function testGetEndpoint()
+    {
+        $action = new DisplayStreetViewPanoramaAction();
+
+        $this->assertEquals(DisplayStreetViewPanoramaAction::ENDPOINT, $action->getEndpoint());
+    }
+
     public function testGetParameters()
     {
         $action = (new DisplayStreetViewPanoramaAction())
@@ -34,6 +41,13 @@ class DisplayStreetViewPanoramaTest extends TestCase
         $action = (new DisplayStreetViewPanoramaAction())->setViewpoint(20, 40);
 
         $this->assertEquals('20,40', $action->getViewpoint());
+    }
+
+    public function testGetViewpointReturnsNullIfIncomplete()
+    {
+        $action = (new DisplayStreetViewPanoramaAction())->setViewpointLongitude(40);
+
+        $this->assertNull($action->getViewpoint());
     }
 
     public function testSetHeading()

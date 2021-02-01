@@ -10,6 +10,13 @@ use PHPUnit\Framework\TestCase;
 
 class DirectionsActionTest extends TestCase
 {
+    public function testGetEndpoint()
+    {
+        $action = new DirectionsAction();
+
+        $this->assertEquals(DirectionsAction::ENDPOINT, $action->getEndpoint());
+    }
+
     public function testGetParameters()
     {
         $action = (new DirectionsAction())

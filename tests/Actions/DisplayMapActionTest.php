@@ -11,6 +11,13 @@ use PHPUnit\Framework\TestCase;
 
 class DisplayMapActionTest extends TestCase
 {
+    public function testGetEndpoint()
+    {
+        $action = new DisplayMapAction();
+
+        $this->assertEquals(DisplayMapAction::ENDPOINT, $action->getEndpoint());
+    }
+
     public function testGetParameters()
     {
         $action = (new DisplayMapAction())
@@ -26,6 +33,13 @@ class DisplayMapActionTest extends TestCase
             'basemap' => BaseMap::TRAFFIC,
             'layer' => Layer::BICYCLING,
         ], $action->getParameters());
+    }
+
+    public function testGetCenterReturnsNullIfIncomplete()
+    {
+        $action = (new DisplayMapAction())->setCenterLatitude(40);
+
+        $this->assertNull($action->getCenter());
     }
 
     public function testSetCenter()
