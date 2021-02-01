@@ -2,9 +2,9 @@
 
 namespace CyrildeWit\MapsUrls\Actions;
 
-use CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction;
-use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
+use CyrildeWit\MapsUrls\Enums\TravelMode;
+use CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction;
 use CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode;
 
 class DirectionsAction extends AbstractAction

@@ -29,7 +29,8 @@ class AbstractActionTest extends TestCase
     }
 }
 
-class TestAbstractAction extends AbstractAction {
+class TestAbstractAction extends AbstractAction
+{
     protected array $queryParametersSetters = [
         'string' => 'setStringProp',
         'int' => 'setIntProp',
@@ -102,4 +103,4 @@ class TestAbstractAction extends AbstractAction {
 
         return $this;
     }
-};
+}
