@@ -43,7 +43,9 @@ This package provides a convenient way to generate URLs for the Google Maps URLs
       * [Search](#search)
       * [Directions](#directions)
       * [Displaying a map](#displaying-a-map)
-      * [Display a Street View panorama](#display-a-street-view-panorama)
+      * [Display a Street View panorama](#display-a-street-view-panorama)     
+3. [Credits](#credits)
+4. [License](#license)
 
 ## Getting Started
 
