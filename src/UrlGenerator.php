@@ -7,8 +7,7 @@ use CyrildeWit\MapsUrls\Actions\AbstractAction;
 class UrlGenerator
 {
     const BASE_URL = 'https://www.google.com/maps/';
-
-    protected string $apiVersion = '1';
+    const API_VERSION = '1';
 
     protected AbstractAction $action;
 
@@ -32,13 +31,6 @@ class UrlGenerator
         return $this;
     }
 
-    public function setApiVersion(string $version): self
-    {
-        $this->apiVersion = $version;
-
-        return $this;
-    }
-
     protected function collectParameters(): array
     {
         $actionParameters = $this->action->getParameters();
@@ -49,7 +41,7 @@ class UrlGenerator
     protected function getDefaultParameters(): array
     {
         return [
-            'api' => $this->apiVersion,
+            'api' => self::API_VERSION,
         ];
     }
 
