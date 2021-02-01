@@ -1,11 +1,11 @@
 # PHP Google Maps URLs
 
-[![Packagist](https://img.shields.io/packagist/v/cyrildewit/php-maps-url.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urle)
-[![run-tests](https://github.com/cyrildewit/php-maps-url/workflows/run-tests/badge.svg)](https://github.com/cyrildewit/php-maps-url/actions)
+[![Packagist](https://img.shields.io/packagist/v/cyrildewit/php-maps-urls.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urls)
+[![run-tests](https://github.com/cyrildewit/php-maps-urls/workflows/run-tests/badge.svg)](https://github.com/cyrildewit/php-maps-urls/actions)
 [![StyleCI](https://styleci.io/repos/133079607/shield?style=flat-square)](https://styleci.io/repos/133079607)
-[![Codecov branch](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-url/master.svg?style=flat-square)](https://codecov.io/gh/cyrildewit/php-maps-url)
-[![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-url.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-url)
-[![License](https://img.shields.io/github/license/cyrildewit/eloquentphp-maps-url.svg?style=flat-square)](https://github.com/cyrildewit/php-maps-url/blob/master/LICENSE.md)
+[![Codecov branch](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls/master.svg?style=flat-square)](https://codecov.io/gh/cyrildewit/php-maps-urls)
+[![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urls)
+[![License](https://img.shields.io/github/license/cyrildewit/eloquentphp-maps-urls.svg?style=flat-square)](https://github.com/cyrildewit/php-maps-urls/blob/1.x/LICENSE.md)
 
 This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide).
 
@@ -70,7 +70,7 @@ composer require cyrildewit/php-maps-urls
 
 ### Generating a URL
 
-The `\CyrildeWit\MapsUrls\UrlGenerator` class is responsible for generation the URLs. The constructor accepts an instance of an action class. Action classes extends `\CyrildeWit\MapsUrls\Actions\AbstractAction`.
+The `CyrildeWit\MapsUrls\UrlGenerator` class is responsible for generation the URLs. The constructor accepts an instance of an action class. Action classes extends `CyrildeWit\MapsUrls\Actions\AbstractAction`.
 
 ```php
 use CyrildeWit\MapsUrls\UrlGenerator;
@@ -113,7 +113,7 @@ $searchAction = (new SearchAction())
 
 ###### Query Place ID
 
-If you want to specify the optional place ID for a search action, you can add it using the `setQueryPlaceId(string $placeId)` mehod.
+If you want to specify the optional place ID for a search action, you can add it using the `setQueryPlaceId(string $placeId)` method.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\SearchAction;
@@ -194,7 +194,7 @@ The travel mode can be defined using method `setTravelMode(string $travelmode)`.
 * `bicycling`
 * `transit`
 
-These options can be referenced using the constants defined in `\CyrildeWit\MapsUrls\Enums\TravelMode`.
+These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\TravelMode`.
 
 ```php
 CyrildeWit\MapsUrls\Enums\TravelMode::DRIVING;
@@ -213,7 +213,7 @@ $directionsAction = (new DirectionsAction())
     ->setTravelmode(TravelMode::BICYCLING);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode` exception will be thrown when an invalid travel mode is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode` exception will be thrown when an invalid travel mode is provided.
 
 ###### Direction Action
 
@@ -227,7 +227,7 @@ $directionsAction = (new DirectionsAction())
     ->setDirectionAction(DirectionAction::NAVIGATE);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction` exception will be thrown when an invalid direction action is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction` exception will be thrown when an invalid direction action is provided.
 
 ###### Waypoints
 
@@ -268,7 +268,7 @@ To instantiate a directions action with initial query parameters values, you can
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
-use \CyrildeWit\MapsUrls\Enums\DirectionAction;
+use CyrildeWit\MapsUrls\Enums\DirectionAction;
 
 $directionsAction = DirectionsAction::make([
     'origin' => 'Eindhoven, Nederland',
@@ -326,7 +326,7 @@ The base map can be defined using method `setBaseMap(string $baseMap)`. The vali
 * `traffic`
 * `bicycling`
 
-These options can be referenced using the constants defined in `\CyrildeWit\MapsUrls\Enums\TravelMode`.
+These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\TravelMode`.
 
 ```php
 CyrildeWit\MapsUrls\Enums\BaseMap::NONE;
@@ -344,7 +344,7 @@ $displayMapAction = (new DisplayMapAction())
     ->setBaseMap(BaseMap::TRAFFIC);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap` exception will be thrown when an invalid base map is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap` exception will be thrown when an invalid base map is provided.
 
 ###### Layer
 
@@ -355,7 +355,7 @@ The layer can be defined using method `setLayer(string $layer)`. The valid optio
 * `traffic`
 * `bicycling`
 
-These options can be referenced using the constants defined in `\CyrildeWit\MapsUrls\Enums\Layer`.
+These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\Layer`.
 
 ```php
 CyrildeWit\MapsUrls\Enums\Layer::NONE;
@@ -374,7 +374,7 @@ $displayMapAction = (new DisplayMapAction())
     ->setLayer(Layer::TRAFFIC);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidLayer` exception will be thrown when an invalid layer is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidLayer` exception will be thrown when an invalid layer is provided.
 
 ###### Magic make constructor
 
@@ -435,7 +435,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setHeading(120);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidHeading` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidHeading` exception will be thrown when an invalid heading is provided.
 
 ###### Pitch
 
@@ -448,7 +448,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setPitch(40);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidPitch` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidPitch` exception will be thrown when an invalid heading is provided.
 
 ###### Fov
 
@@ -461,7 +461,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setFov(80);
 ```
 
-The `\CyrildeWit\MapsUrls\Exceptions\InvalidFov` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidFov` exception will be thrown when an invalid heading is provided.
 
 ###### Magic make constructor
 
