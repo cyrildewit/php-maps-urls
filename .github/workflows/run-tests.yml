@@ -1,0 +1,43 @@
+name: run-tests
+
+on: [push]
+
+jobs:
+  run:
+    runs-on: ${{ matrix.operating-system }}
+    strategy:
+      matrix:
+        operating-system: [ubuntu-latest]
+        php: ['7.4', '8.0']
+        composer-stability: [prefer-lowest, prefer-stable]
+
+    name: PHP ${{ matrix.php-versions }} - ${{ matrix.stability }} - OS ${{ matrix.operating-system }}
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Cache dependencies
+        uses: actions/cache@v1
+        with:
+          path: ~/.composer/cache/files
+          key: dependencies-php-${{ matrix.php }}-composer-${{ hashFiles('composer.json') }}
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ matrix.php }}
+          extensions: mbstring, pdo, pdo_mysql, intl, zip
+          coverage: xdebug
+
+      - name: Install dependencies
+        run: composer update --prefer-dist --no-interaction --prefer-source
+
+      - name: Execute tests
+        run: vendor/bin/phpunit --verbose
+
+      - name: Upload coverage to Codecov
+       uses: codecov/codecov-action@v1
+       with:
+         token: ${{ secrets.CODECOV_TOKEN }}
+         file: ./build/logs/clover.xml
