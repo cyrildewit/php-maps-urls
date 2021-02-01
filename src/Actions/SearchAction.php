@@ -2,45 +2,20 @@
 
 namespace CyrildeWit\MapsUrls\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 class SearchAction extends AbstractAction
 {
-    /**
-     * @var string
-     */
-    protected $endpoint = 'search/';
+    const ENDPOINT = 'search/';
 
-    /**
-     * @var array
-     */
-    protected $setters = [
+    protected array $queryParametersSetters = [
         'query' => 'setQuery',
+        'query_coordinates' => 'setQueryCoordinates',
         'query_place_id' => 'setQueryPlaceId',
     ];
 
-    /**
-     * @var string
-     */
-    protected $query;
+    protected ?string $query = null;
 
-    /**
-     * @var string
-     */
-    protected $queryPlaceId;
+    protected ?string $queryPlaceId = null;
 
-    /**
-     * Get the action's parameters.
-     *
-     * @return array
-     */
     public function getParameters(): array
     {
         return [
@@ -49,70 +24,36 @@ class SearchAction extends AbstractAction
         ];
     }
 
-    /**
-     * Get the search action's endpoint.
-     *
-     * @return string
-     */
     public function getEndpoint(): string
     {
-        return $this->endpoint;
+        return self::ENDPOINT;
     }
 
-    /**
-     * Get the search action's query.
-     *
-     * @return string
-     */
-    public function getQuery(): string
+    public function getQuery(): ?string
     {
         return $this->query;
     }
 
-    /**
-     * Get the search action's query place id.
-     *
-     * @return string
-     */
-    public function getQueryPlaceId(): string
+    public function getQueryPlaceId(): ?string
     {
         return $this->queryPlaceId;
     }
 
-    /**
-     * Set the search action's query.
-     *
-     * @param  string  $query
-     * @return $this
-     */
-    public function setQuery(string $query)
+    public function setQuery(string $query): self
     {
         $this->query = $query;
 
         return $this;
     }
 
-    /**
-     * Set the search action's query with coordinates.
-     *
-     * @param  float  $lat
-     * @param  float  $lng
-     * @return $this
-     */
-    public function setCoordinates(float $lat, float $lng)
+    public function setQueryCoordinates(float $latitude, float $longitude): self
     {
-        $this->query = $lat.','.$lng;
+        $this->query = "{$latitude},{$longitude}";
 
         return $this;
     }
 
-    /**
-     * Set the search action's query place id.
-     *
-     * @param  string $placeId
-     * @return $this
-     */
-    public function setQueryPlaceId(string $placeId)
+    public function setQueryPlaceId(string $placeId): self
     {
         $this->queryPlaceId = $placeId;
 

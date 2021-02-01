@@ -2,29 +2,16 @@
 
 namespace CyrildeWit\MapsUrls\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-use Exception;
+use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
+use CyrildeWit\MapsUrls\Exceptions\InvalidHeading;
+use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
 
 class DisplayStreetViewPanoramaAction extends AbstractAction
 {
-    /**
-     * @var string
-     */
-    protected $endpoint = '@';
+    const ENDPOINT = '@';
+    const MAP_ACTION = 'pano';
 
-    /**
-     * @var array
-     */
-    protected $setters = [
-        'map_action' => 'setQuery',
+    protected array $queryParametersSetters = [
         'viewpoint' => 'setViewpoint',
         'pano' => 'setPano',
         'heading' => 'setHeading',
@@ -32,160 +19,101 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
         'fov' => 'setFov',
     ];
 
-    /**
-     * @var string
-     */
-    protected $mapAction = 'pano';
+    protected ?float $viewpointLatitude = null;
+    protected ?float $viewpointLongitude = null;
 
-    /**
-     * @var string
-     */
-    protected $viewpoint;
+    protected ?string $panoramaId = null;
 
-    /**
-     * @var string
-     */
-    protected $panoramaId;
+    protected ?int $heading = null;
 
-    /**
-     * @var int
-     */
-    protected $heading;
+    protected ?int $pitch = null;
 
-    /**
-     * @var int
-     */
-    protected $pitch;
+    protected ?int $fov = null;
 
-    /**
-     * @var int
-     */
-    protected $fov;
-
-    /**
-     * Get the action's parameters.
-     *
-     * @return array
-     */
     public function getParameters(): array
     {
         return [
-            'map_action' => $this->mapAction,
-            'viewpoint' => $this->viewpoint,
-            'pano' => $this->panoramaId,
-            'heading' => $this->heading,
-            'pitch' => $this->pitch,
-            'fov' => $this->fov,
+            'map_action' => $this->getMapAction(),
+            'viewpoint' => $this->getViewpoint(),
+            'pano' => $this->getPanoramaId(),
+            'heading' => $this->getHeading(),
+            'pitch' => $this->getPitch(),
+            'fov' => $this->getFov(),
         ];
     }
 
-    /**
-     * Get the street view panorama action's endpoint.
-     *
-     * @return string
-     */
     public function getEndpoint(): string
     {
-        return $this->endpoint;
+        return self::ENDPOINT;
     }
 
-    /**
-     * Get the street view panorama action's map action.
-     *
-     * @return string
-     */
     public function getMapAction(): string
     {
-        return $this->mapAction;
+        return self::MAP_ACTION;
     }
 
-    /**
-     * Get the street view panorama action's viewpoint.
-     *
-     * @return string
-     */
-    public function getViewpoint()
+    public function getViewpoint(): ?string
     {
-        return $this->viewpoint;
+        if (empty($this->viewpointLatitude) || empty($this->viewpointLongitude)) {
+            return null;
+        }
+
+        return "{$this->viewpointLatitude},{$this->viewpointLongitude}";
     }
 
-    /**
-     * Get the street view panorama action's panorama id.
-     *
-     * @return string
-     */
-    public function getPanoramaId()
+    public function getPanoramaId(): ?string
     {
-        return $this->pano;
+        return $this->panoramaId;
     }
 
-    /**
-     * Get the street view panorama action's heading.
-     *
-     * @return string
-     */
-    public function getHeading()
+    public function getHeading(): ?int
     {
         return $this->heading;
     }
 
-    /**
-     * Get the street view panorama action's pitch.
-     *
-     * @return string
-     */
-    public function getPitch()
+    public function getPitch(): ?int
     {
         return $this->pitch;
     }
 
-    /**
-     * Get the street view panorama action's fov.
-     *
-     * @return string
-     */
-    public function getFov()
+    public function getFov(): ?int
     {
         return $this->fov;
     }
 
-    /**
-     * Set the street view panorama action's viewpoint.
-     *
-     * @param  float  $lat
-     * @param  float  $lng
-     * @return $this
-     */
-    public function setViewpoint(float $lat, float $lng)
+    public function setViewpoint(float $latitude, float $longitude): self
     {
-        $this->viewpoint = $lat.','.$lng;
+        $this->setViewpointLatitude($latitude);
+        $this->setViewpointLongitude($longitude);
 
         return $this;
     }
 
-    /**
-     * Set the street view panorama action's panorama id.
-     *
-     * @param  string  $id
-     * @return $this
-     */
-    public function setPanoramaId(string $id)
+    public function setViewpointLatitude(float $latitude): self
+    {
+        $this->viewpointLatitude = $latitude;
+
+        return $this;
+    }
+
+    public function setViewpointLongitude(float $longitude): self
+    {
+        $this->viewpointLongitude = $longitude;
+
+        return $this;
+    }
+
+    public function setPanoramaId(string $id): self
     {
         $this->panoramaId = $id;
 
         return $this;
     }
 
-    /**
-     * Set the street view panorama action's heading.
-     *
-     * @param  int  $degrees
-     * @return $this
-     */
-    public function setHeading(int $degrees)
+    public function setHeading(int $degrees): self
     {
         if ($degrees < -180 || $degrees > 360) {
-            throw new Exception('Heading is out of range: '.$degrees);
+            throw InvalidHeading::outOfRange($degrees);
         }
 
         $this->heading = $degrees;
@@ -193,16 +121,10 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
         return $this;
     }
 
-    /**
-     * Set the street view panorama action's pitch.
-     *
-     * @param  int  $degrees
-     * @return $this
-     */
-    public function setPitch(int $degrees)
+    public function setPitch(int $degrees): self
     {
         if ($degrees < -90 || $degrees > 80) {
-            throw new Exception('Pitch is out of range: '.$degrees);
+            throw InvalidPitch::outOfRange($degrees);
         }
 
         $this->pitch = $degrees;
@@ -210,16 +132,10 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
         return $this;
     }
 
-    /**
-     * Set the street view panorama action's pitch.
-     *
-     * @param  int  $degrees
-     * @return $this
-     */
-    public function setFov(int $degrees)
+    public function setFov(int $degrees): self
     {
         if ($degrees < 10 || $degrees > 100) {
-            throw new Exception('Fov is out of range: '.$degrees);
+            throw InvalidFov::outOfRange($degrees);
         }
 
         $this->fov = $degrees;

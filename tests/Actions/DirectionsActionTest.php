@@ -2,24 +2,17 @@
 
 namespace CyrildeWit\MapsUrls\Tests\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-use CyrildeWit\MapsUrls\Actions\DirectionAction;
-use Exception;
+use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\TravelMode;
+use CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction;
+use CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode;
 use PHPUnit\Framework\TestCase;
 
-class DirectionActionTest extends TestCase
+class DirectionsActionTest extends TestCase
 {
     public function testGetParameters()
     {
-        $action = (new DirectionAction())
+        $action = (new DirectionsAction())
             ->setOrigin('Amsterdam')
             ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
             ->setDestination('Monnickendam')
@@ -41,31 +34,31 @@ class DirectionActionTest extends TestCase
         ], $action->getParameters());
     }
 
-    public function testSetTravelmode()
+    public function testSetTravelMode()
     {
-        $action = (new DirectionAction())->setTravelmode('driving');
+        $action = (new DirectionsAction())->setTravelmode(TravelMode::DRIVING);
 
-        $this->assertEquals('driving', $action->getTravelmode());
+        $this->assertEquals(TravelMode::DRIVING, $action->getTravelmode());
     }
 
-    public function testSetTravelmodeReturnsException()
+    public function testSetTravelModeReturnsException()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidTravelMode::class);
 
-        $action = (new DirectionAction())->setTravelmode('unsupported');
+        (new DirectionsAction())->setTravelmode('unsupported');
     }
 
     public function testSetDirectionAction()
     {
-        $action = (new DirectionAction())->setDirectionAction('navigate');
+        $action = (new DirectionsAction())->setDirectionAction('navigate');
 
         $this->assertEquals('navigate', $action->getDirectionAction());
     }
 
     public function testSetDirectionActionReturnsException()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidDirectionAction::class);
 
-        $action = (new DirectionAction())->setDirectionAction('unsupported');
+        (new DirectionsAction())->setDirectionAction('unsupported');
     }
 }

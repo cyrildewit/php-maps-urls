@@ -2,230 +2,147 @@
 
 namespace CyrildeWit\MapsUrls\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
-use Exception;
+use CyrildeWit\MapsUrls\Enums\BaseMap;
+use CyrildeWit\MapsUrls\Enums\Layer;
+use CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap;
+use CyrildeWit\MapsUrls\Exceptions\InvalidLayer;
 
 class DisplayMapAction extends AbstractAction
 {
-    /**
-     * @var string
-     */
-    protected $endpoint = '@';
+    const ENDPOINT = '@';
+    const MAP_ACTION = 'map';
 
-    /**
-     * @var array
-     */
-    protected $setters = [
+    protected array $queryParametersSetters = [
         'center' => 'setCenter',
         'zoom' => 'setZoom',
-        'basemap' => 'setBasemap',
+        'basemap' => 'setBaseMap',
         'layer' => 'setLayer',
     ];
 
-    /**
-     * Collection of supported basemaps.
-     *
-     * @var array
-     */
-    protected $basemaps = [
-        'none', 'traffic', 'bicycling',
+    protected array $baseMaps = [
+        BaseMap::NONE,
+        BaseMap::TRAFFIC,
+        BaseMap::BICYCLING,
     ];
 
-    /**
-     * Collection of supported layers.
-     *
-     * @var array
-     */
-    protected $layers = [
-        'none', 'transit', 'traffic', 'bicycling',
+    protected array $layers = [
+        Layer::NONE,
+        Layer::TRANSIT,
+        Layer::TRAFFIC,
+        Layer::BICYCLING,
     ];
 
-    /**
-     * @var string
-     */
-    protected $mapAction = 'map';
+    protected ?float $centerLatitude = null;
+    protected ?float $centerLongitude = null;
 
-    /**
-     * @var string
-     */
-    protected $center;
+    protected ?int $zoom = null;
 
-    /**
-     * @var int
-     */
-    protected $zoom;
+    protected ?string $baseMap = null;
 
-    /**
-     * @var string
-     */
-    protected $basemap;
+    protected ?string $layer = null;
 
-    /**
-     * @var string
-     */
-    protected $layer;
-
-    /**
-     * Get the display map action's parameters.
-     *
-     * @return array
-     */
     public function getParameters(): array
     {
         return [
-            'map_action' => $this->mapAction,
-            'center' => $this->center,
-            'zoom' => $this->zoom,
-            'basemap' => $this->basemap,
-            'layer' => $this->layer,
+            'map_action' => $this->getMapAction(),
+            'center' => $this->getCenter(),
+            'zoom' => $this->getZoom(),
+            'basemap' => $this->getBaseMap(),
+            'layer' => $this->getLayer(),
         ];
     }
 
-    /**
-     * Get the display map action's endpoint.
-     *
-     * @return string
-     */
     public function getEndpoint(): string
     {
-        return $this->endpoint;
+        return self::ENDPOINT;
     }
 
-    /**
-     * Get the display map action's map action.
-     *
-     * @return string
-     */
-    public function getMapAction()
+    public function getMapAction(): string
     {
-        return $this->mapAction;
+        return self::MAP_ACTION;
     }
 
-    /**
-     * Get the display map action's center.
-     *
-     * @return string
-     */
-    public function getCenter()
+    public function getCenter(): ?string
     {
-        return $this->center;
+        if (empty($this->centerLatitude) || empty($this->centerLongitude)) {
+            return null;
+        }
+
+        return "{$this->centerLatitude},{$this->centerLongitude}";
     }
 
-    /**
-     * Get the display map action's basemap .
-     *
-     * @return string
-     */
-    public function getBasemap()
+    public function getZoom(): ?string
     {
-        return $this->basemap;
+        return $this->zoom;
     }
 
-    /**
-     * Get the display map action's layer .
-     *
-     * @return string
-     */
-    public function getLayer()
+    public function getBaseMap(): ?string
+    {
+        return $this->baseMap;
+    }
+
+    public function getLayer(): ?string
     {
         return $this->layer;
     }
 
-    /**
-     * Set the display map action's center.
-     *
-     * @param  float  $lat
-     * @param  float  $lng
-     * @return $this
-     */
-    public function setCenter(float $lat, float $lng)
+    public function setCenter(float $latitude, float $longitude): self
     {
-        $this->center = $lat.','.$lng;
+        $this->setCenterLatitude($latitude);
+        $this->setCenterLongitude($longitude);
 
         return $this;
     }
 
-    /**
-     * Set the display map action's zoom.
-     *
-     * @param  int  $zoom
-     * @return $this
-     */
-    public function setZoom(int $zoom)
+    public function setCenterLatitude(float $latitude): self
     {
-        $this->zoom = $zoom;
+        $this->centerLatitude = $latitude;
 
         return $this;
     }
 
-    /**
-     * Set the display map action's basemap.
-     *
-     * @param  string  $basemap
-     * @return $this
-     */
-    public function setBasemap(string $basemap)
+    public function setCenterLongitude(float $longitude): self
     {
-        if ($this->invalidBasemap($basemap)) {
-            throw new Exception('Invalid basemap: '.$basemap);
+        $this->centerLongitude = $longitude;
+
+        return $this;
+    }
+
+    public function setZoom(int $zoom): self
+    {
+        $this->zoom = "{$zoom}";
+
+        return $this;
+    }
+
+    public function setBaseMap(string $baseMap): self
+    {
+        if ($this->invalidBaseMap($baseMap)) {
+            throw InvalidBaseMap::unsupportedBaseMap($baseMap);
         }
 
-        // Leave it empty if it's equal to none, since this parameter is
-        // optional.
-        if ($basemap !== 'none') {
-            $this->basemap = $basemap;
-        }
+        $this->baseMap = $baseMap;
 
         return $this;
     }
 
-    /**
-     * Set the display map action's layer.
-     *
-     * @param  string  $layer
-     * @return $this
-     */
-    public function setLayer(string $layer)
+    public function setLayer(string $layer): self
     {
         if ($this->invalidLayer($layer)) {
-            throw new Exception('Invalid layer: '.$layer);
+            throw InvalidLayer::unsupportedLayer($layer);
         }
 
-        // Leave it empty if it's equal to none, since this parameter is
-        // optional.
-        if ($layer !== 'none') {
-            $this->layer = $layer;
-        }
+        $this->layer = $layer;
 
         return $this;
     }
 
-    /**
-     * Determine if the given basemap is supported.
-     *
-     * @param  string  $basemap
-     * @return bool
-     */
-    protected function invalidBasemap(string $basemap)
+    protected function invalidBaseMap(string $baseMap): bool
     {
-        return ! in_array(strtolower($basemap), $this->basemaps);
+        return ! in_array(strtolower($baseMap), $this->baseMaps);
     }
 
-    /**
-     * Determine if the given layer is supported.
-     *
-     * @param  string  $layer
-     * @return bool
-     */
-    protected function invalidLayer(string $layer)
+    protected function invalidLayer(string $layer): bool
     {
         return ! in_array(strtolower($layer), $this->layers);
     }

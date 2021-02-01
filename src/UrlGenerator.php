@@ -2,48 +2,22 @@
 
 namespace CyrildeWit\MapsUrls;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+use CyrildeWit\MapsUrls\Actions\AbstractAction;
 
 class UrlGenerator
 {
-    /**
-     * @var string
-     */
     const BASE_URL = 'https://www.google.com/maps/';
 
-    /**
-     * @var int|string
-     */
-    protected $apiVersion = 1;
+    protected string $apiVersion = '1';
 
-    /**
-     * @var \CyrildeWit\MapsUrls\ActionInterface|null
-     */
-    protected $action;
+    protected AbstractAction $action;
 
-    /**
-     * Create a new MapsUrl instance.
-     *
-     * @return void
-     */
-    public function __construct($action = null)
+    public function __construct(AbstractAction $action)
     {
         $this->action = $action;
     }
 
-    /**
-     * Generate a url from an acton instance.
-     *
-     * @return string
-     */
-    public function generate()
+    public function generate(): string
     {
         $parameters = $this->collectParameters();
         $queryString = $this->formatQueryString($parameters);
@@ -51,37 +25,20 @@ class UrlGenerator
         return self::BASE_URL.$this->action->getEndpoint().'?'.$queryString;
     }
 
-    /**
-     * Set the URL's action.
-     *
-     * @param  \CyrildeWit\MapsUrls\Actions\ActionInterface  $action
-     * @return $this
-     */
-    public function setAction($action)
+    public function setAction(AbstractAction $action): self
     {
         $this->action = $action;
 
         return $this;
     }
 
-    /**
-     * Set the API's version number.
-     *
-     * @param  string|int  $version
-     * @return $this
-     */
-    public function setApiVersion($version)
+    public function setApiVersion(string $version): self
     {
         $this->apiVersion = $version;
 
         return $this;
     }
 
-    /**
-     * Collect all parameters.
-     *
-     * @return array
-     */
     protected function collectParameters(): array
     {
         $actionParameters = $this->action->getParameters();
@@ -89,11 +46,6 @@ class UrlGenerator
         return array_merge($this->getDefaultParameters(), $actionParameters);
     }
 
-    /**
-     * Get default parameters.
-     *
-     * @return array
-     */
     protected function getDefaultParameters(): array
     {
         return [
@@ -101,12 +53,6 @@ class UrlGenerator
         ];
     }
 
-    /**
-     * Format a parameter list to a query string.
-     *
-     * @param  array  $parameters
-     * @return array
-     */
     protected function formatQueryString(array $parameters): string
     {
         return http_build_query($parameters);

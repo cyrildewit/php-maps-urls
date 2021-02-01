@@ -2,15 +2,6 @@
 
 namespace CyrildeWit\MapsUrls\Tests;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
 use CyrildeWit\MapsUrls\UrlGenerator;
 use PHPUnit\Framework\TestCase;

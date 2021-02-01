@@ -2,17 +2,11 @@
 
 namespace CyrildeWit\MapsUrls\Tests\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
-use Exception;
+use CyrildeWit\MapsUrls\Enums\BaseMap;
+use CyrildeWit\MapsUrls\Enums\Layer;
+use CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap;
+use CyrildeWit\MapsUrls\Exceptions\InvalidLayer;
 use PHPUnit\Framework\TestCase;
 
 class DisplayMapActionTest extends TestCase
@@ -22,15 +16,15 @@ class DisplayMapActionTest extends TestCase
         $action = (new DisplayMapAction())
             ->setCenter(40, 40)
             ->setZoom(20)
-            ->setBasemap('traffic')
-            ->setLayer('bicycling');
+            ->setBaseMap(BaseMap::TRAFFIC)
+            ->setLayer(Layer::BICYCLING);
 
         $this->assertEquals([
-            'map_action' => 'map',
+            'map_action' => DisplayMapAction::MAP_ACTION,
             'center' => '40,40',
-            'zoom' => 20,
-            'basemap' => 'traffic',
-            'layer' => 'bicycling',
+            'zoom' => '20',
+            'basemap' => BaseMap::TRAFFIC,
+            'layer' => Layer::BICYCLING,
         ], $action->getParameters());
     }
 
@@ -43,43 +37,29 @@ class DisplayMapActionTest extends TestCase
 
     public function testSetBasemap()
     {
-        $action = (new DisplayMapAction())->setBasemap('traffic');
+        $action = (new DisplayMapAction())->setBaseMap(BaseMap::TRAFFIC);
 
-        $this->assertEquals('traffic', $action->getBasemap());
-    }
-
-    public function testSetBasemapNone()
-    {
-        $action = (new DisplayMapAction())->setBasemap('none');
-
-        $this->assertNull($action->getBasemap());
+        $this->assertEquals(BaseMap::TRAFFIC, $action->getBasemap());
     }
 
     public function testSetBasemapInvalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidBaseMap::class);
 
-        $action = (new DisplayMapAction())->setBasemap('unsupported');
+        (new DisplayMapAction())->setBaseMap('unsupported');
     }
 
     public function testSetLayer()
     {
-        $action = (new DisplayMapAction())->setLayer('transit');
+        $action = (new DisplayMapAction())->setLayer(Layer::TRANSIT);
 
-        $this->assertEquals('transit', $action->getLayer());
-    }
-
-    public function testSetLayerNone()
-    {
-        $action = (new DisplayMapAction())->setLayer('none');
-
-        $this->assertNull($action->getLayer());
+        $this->assertEquals(Layer::TRANSIT, $action->getLayer());
     }
 
     public function testSetLayerInvalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidLayer::class);
 
-        $action = (new DisplayMapAction())->setLayer('unsupported');
+        (new DisplayMapAction())->setLayer('unsupported');
     }
 }

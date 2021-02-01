@@ -2,15 +2,6 @@
 
 namespace CyrildeWit\MapsUrls\Tests\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use CyrildeWit\MapsUrls\Actions\SearchAction;
 use PHPUnit\Framework\TestCase;
 
@@ -19,18 +10,18 @@ class SearchActionTest extends TestCase
     public function testGetParameters()
     {
         $action = (new SearchAction())
-            ->setQuery('Nederland Amsterdam')
-            ->setQueryPlaceId('abcdefghijklmnopqrstuvwxyz');
+            ->setQuery('Eindhoven, Nederland')
+            ->setQueryPlaceId('ChIJn8N5VRvZxkcRmLlkgWTSmvM');
 
         $this->assertEquals([
-            'query' => 'Nederland Amsterdam',
-            'query_place_id' => 'abcdefghijklmnopqrstuvwxyz',
+            'query' => 'Eindhoven, Nederland',
+            'query_place_id' => 'ChIJn8N5VRvZxkcRmLlkgWTSmvM',
         ], $action->getParameters());
     }
 
-    public function testSetCoordinates()
+    public function testSetQueryCoordinates()
     {
-        $action = (new SearchAction())->setCoordinates(41, 2);
+        $action = (new SearchAction())->setQueryCoordinates(41, 2);
 
         $this->assertEquals('41,2', $action->getQuery());
     }

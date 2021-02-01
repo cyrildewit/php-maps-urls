@@ -2,17 +2,10 @@
 
 namespace CyrildeWit\MapsUrls\Tests\Actions;
 
-/*
- * This file is part of the Maps URLs package.
- *
- * (c) Cyril de Wit <github@cyrildewit.nl>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
-use Exception;
+use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
+use CyrildeWit\MapsUrls\Exceptions\InvalidHeading;
+use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
 use PHPUnit\Framework\TestCase;
 
 class DisplayStreetViewPanoramaTest extends TestCase
@@ -52,9 +45,9 @@ class DisplayStreetViewPanoramaTest extends TestCase
 
     public function testSetHeadingInvalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidHeading::class);
 
-        $action = (new DisplayStreetViewPanoramaAction())->setHeading(-200);
+        (new DisplayStreetViewPanoramaAction())->setHeading(-200);
     }
 
     public function testSetPitch()
@@ -66,9 +59,9 @@ class DisplayStreetViewPanoramaTest extends TestCase
 
     public function testSetPitchInvalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidPitch::class);
 
-        $action = (new DisplayStreetViewPanoramaAction())->setPitch(120);
+        (new DisplayStreetViewPanoramaAction())->setPitch(120);
     }
 
     public function testSetFov()
@@ -80,8 +73,8 @@ class DisplayStreetViewPanoramaTest extends TestCase
 
     public function testSetFovInvalid()
     {
-        $this->expectException(Exception::class);
+        $this->expectException(InvalidFov::class);
 
-        $action = (new DisplayStreetViewPanoramaAction())->setFov(120);
+        (new DisplayStreetViewPanoramaAction())->setFov(120);
     }
 }
