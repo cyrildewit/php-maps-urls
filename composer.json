@@ -1,11 +1,10 @@
 {
     "name": "cyrildewit/php-maps-urls",
-    "description": "",
+    "description": "Generate URLs for the Google Maps URLs API",
     "type": "library",
     "license": "Apache-2.0",
     "homepage": "https://github.com/cyrildewit/php-maps-urls",
     "keywords": [
-        "cyrildewit",
         "php",
         "google",
         "maps",
@@ -13,7 +12,7 @@
         "urls"
     ],
     "support": {
-        "email": "github@cyrildewit.nl",
+        "email": "opensource@cyrildewit.nl",
         "issues": "https://github.com/cyrildewit/php-maps-urls/issues",
         "source": "https://github.com/cyrildewit/php-maps-urls"
     },
@@ -21,15 +20,15 @@
         {
             "name": "Cyril de Wit",
             "email": "info@cyrildewit.nl",
-            "homepage": "http://cyrildewit.nl",
+            "homepage": "https://cyrildewit.nl",
             "role": "Developer"
         }
     ],
     "require": {
-        "php": "^7.0 || ^8.0"
+        "php": "^7.4|^8.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "^6.5 || ^9.0"
+        "phpunit/phpunit": "^9.0"
     },
     "autoload": {
         "psr-4": {
