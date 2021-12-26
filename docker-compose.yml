@@ -1,0 +1,28 @@
+version: "3.8"
+services:
+  php:
+    container_name: pmus-php
+    build:
+      context: ./
+      dockerfile: "./docker/php/Dockerfile"
+      args:
+        - BUILD_UID=${DOCKER_UID}
+        - BUILD_GID=${DOCKER_GID}
+    working_dir: /var/www/html
+    volumes:
+      - ./:/var/www/html:cached
+      - /var/www/html/.git
+
+  nginx:
+    container_name: pmus-nginx
+    image: wodby/nginx
+    environment:
+      NGINX_STATIC_OPEN_FILE_CACHE: "off"
+      NGINX_ERROR_LOG_LEVEL: debug
+      NGINX_BACKEND_HOST: php
+      NGINX_VHOST_PRESET: php
+      NGINX_SERVER_ROOT: /var/www/html
+    volumes:
+      - ./public:/var/www/html:delegated
+    networks:
+      - default
