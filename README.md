@@ -5,7 +5,7 @@
 [![StyleCI](https://styleci.io/repos/133079607/shield?style=flat-square)](https://styleci.io/repos/133079607)
 [![Codecov branch](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls/master.svg?style=flat-square)](https://codecov.io/gh/cyrildewit/php-maps-urls)
 [![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![License](https://img.shields.io/github/license/cyrildewit/php-maps-urls.svg?style=flat-square)](https://github.com/cyrildewit/php-maps-urls/blob/1.x/LICENSE.md)
+[![License](https://img.shields.io/github/license/cyrildewit/php-maps-urls.svg?style=flat-square)](https://github.com/cyrildewit/php-maps-urls/blob/1.x/LICENSE)
 
 This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide).
 
