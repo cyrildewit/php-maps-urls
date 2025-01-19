@@ -57,8 +57,7 @@ This package requires **PHP 7.4+**.
 
 | Version | Status         | PHP Version    |
 |---------|----------------|----------------|
-| ^1.0    | Active support | ^7.4 and ^8.0  |
-| ^0.0    | End of life    | ^7.0           |
+| ^1.0    | Active support | >= 7.4.0       |
 
 ### Installation
 
