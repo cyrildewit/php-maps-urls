@@ -10,7 +10,8 @@ class UrlGeneratorTest extends TestCase
 {
     public function testGenerate()
     {
-        $urlGenerator = new UrlGenerator(new class extends AbstractAction {
+        $urlGenerator = new UrlGenerator(new class extends AbstractAction
+        {
             public function getEndpoint(): string
             {
                 return 'search/';
@@ -33,7 +34,8 @@ class UrlGeneratorTest extends TestCase
 
     public function testSetAction()
     {
-        $urlGenerator = new UrlGenerator(new class extends AbstractAction {
+        $urlGenerator = new UrlGenerator(new class extends AbstractAction
+        {
             public function getEndpoint(): string
             {
                 return 'endpoint/';
@@ -52,7 +54,8 @@ class UrlGeneratorTest extends TestCase
             $urlGenerator->generate()
         );
 
-        $urlGenerator->setAction(new class extends AbstractAction {
+        $urlGenerator->setAction(new class extends AbstractAction
+        {
             public function getEndpoint(): string
             {
                 return 'endpoint/';
