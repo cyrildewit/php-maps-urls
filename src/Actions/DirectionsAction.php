@@ -12,6 +12,7 @@ class DirectionsAction extends AbstractAction
     const ENDPOINT = 'dir';
 
     /** @var array<string, string> */
+    #[\Override]
     protected array $queryParametersSetters = [
         'origin' => 'setOrigin',
         'origin_place_id' => 'setOriginPlaceId',
@@ -24,6 +25,7 @@ class DirectionsAction extends AbstractAction
     ];
 
     /** @var array<string, class-string<\BackedEnum>> */
+    #[\Override]
     protected array $queryParametersEnums = [
         'travelmode' => TravelMode::class,
         'dir_action' => DirectionAction::class,

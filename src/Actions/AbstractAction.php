@@ -81,6 +81,6 @@ abstract class AbstractAction
      */
     protected function setterTakesMultipleArguments(string $setter): bool
     {
-        return (new ReflectionMethod($this, $setter))->getNumberOfParameters() > 1;
+        return new ReflectionMethod($this, $setter)->getNumberOfParameters() > 1;
     }
 }
