@@ -82,4 +82,19 @@ abstract class AbstractAction
     {
         return new ReflectionMethod($this, $setter)->getNumberOfParameters() > 1;
     }
+
+    /**
+     * The bounds are written once, here at the call site, and passed on to the
+     * message, so the two cannot drift apart.
+     *
+     * @throws InvalidOption
+     */
+    protected function guardRange(string $queryParameter, int $value, int $min, int $max): int
+    {
+        if ($value < $min || $value > $max) {
+            throw InvalidOption::outOfRange($queryParameter, $value, $min, $max);
+        }
+
+        return $value;
+    }
 }

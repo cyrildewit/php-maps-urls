@@ -28,4 +28,9 @@ class InvalidOption extends Exception
 
         return new self("Unknown option '{$queryParameter}'. Expected one of '{$expected}'.");
     }
+
+    public static function outOfRange(string $queryParameter, int $value, int $min, int $max): self
+    {
+        return new self("Invalid value provided for '{$queryParameter}'. Expected from {$min} to {$max}. Received '{$value}'.");
+    }
 }

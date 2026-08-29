@@ -3,9 +3,7 @@
 declare(strict_types=1);
 
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
-use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
-use CyrildeWit\MapsUrls\Exceptions\InvalidHeading;
-use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
 it('exposes the panorama endpoint', function (): void {
     expect((new DisplayStreetViewPanoramaAction)->getEndpoint())
@@ -88,7 +86,7 @@ it('accepts a heading on the edge of the range', function (int $degrees): void {
 
 it('rejects a heading outside the -180 to 360 range', function (int $degrees): void {
     (new DisplayStreetViewPanoramaAction)->setHeading($degrees);
-})->with([-200, 361])->throws(InvalidHeading::class);
+})->with([-200, 361])->throws(InvalidOption::class);
 
 it('accepts a pitch within range', function (): void {
     $action = (new DisplayStreetViewPanoramaAction)->setPitch(20);
@@ -103,7 +101,7 @@ it('accepts a pitch on the edge of the range', function (int $degrees): void {
 
 it('rejects a pitch outside the -90 to 80 range', function (int $degrees): void {
     (new DisplayStreetViewPanoramaAction)->setPitch($degrees);
-})->with([-91, 120])->throws(InvalidPitch::class);
+})->with([-91, 120])->throws(InvalidOption::class);
 
 it('accepts a fov within range', function (): void {
     $action = (new DisplayStreetViewPanoramaAction)->setFov(40);
@@ -118,25 +116,25 @@ it('accepts a fov on the edge of the range', function (int $degrees): void {
 
 it('rejects a fov outside the 10 to 100 range', function (int $degrees): void {
     (new DisplayStreetViewPanoramaAction)->setFov($degrees);
-})->with([9, 120])->throws(InvalidFov::class);
+})->with([9, 120])->throws(InvalidOption::class);
 
 it('reports the accepted heading range', function (): void {
     (new DisplayStreetViewPanoramaAction)->setHeading(400);
 })->throws(
-    InvalidHeading::class,
-    "Invalid heading provided. Expected from -180 to 360 degrees. Received '400'."
+    InvalidOption::class,
+    "Invalid value provided for 'heading'. Expected from -180 to 360. Received '400'."
 );
 
 it('reports the accepted pitch range', function (): void {
     (new DisplayStreetViewPanoramaAction)->setPitch(120);
 })->throws(
-    InvalidPitch::class,
-    "Invalid pitch provided. Expected from -90 to 80 degrees. Received '120'."
+    InvalidOption::class,
+    "Invalid value provided for 'pitch'. Expected from -90 to 80. Received '120'."
 );
 
 it('reports the accepted fov range', function (): void {
     (new DisplayStreetViewPanoramaAction)->setFov(9);
 })->throws(
-    InvalidFov::class,
-    "Invalid fov provided. Expected from 10 to 100 degrees. Received '9'."
+    InvalidOption::class,
+    "Invalid value provided for 'fov'. Expected from 10 to 100. Received '9'."
 );

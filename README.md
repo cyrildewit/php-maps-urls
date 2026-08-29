@@ -409,7 +409,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setHeading(120);
 ```
 
-The `CyrildeWit\MapsUrls\Exceptions\InvalidHeading` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the heading falls outside that range.
 
 ###### Pitch
 
@@ -422,7 +422,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setPitch(40);
 ```
 
-The `CyrildeWit\MapsUrls\Exceptions\InvalidPitch` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the pitch falls outside that range.
 
 ###### Fov
 
@@ -435,7 +435,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setFov(80);
 ```
 
-The `CyrildeWit\MapsUrls\Exceptions\InvalidFov` exception will be thrown when an invalid heading is provided.
+The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the fov falls outside that range.
 
 ###### Magic make constructor
 
