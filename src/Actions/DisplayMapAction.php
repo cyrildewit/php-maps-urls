@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Enums\BaseMap;
@@ -8,6 +10,7 @@ use CyrildeWit\MapsUrls\Enums\Layer;
 class DisplayMapAction extends AbstractAction
 {
     const ENDPOINT = '@';
+
     const MAP_ACTION = 'map';
 
     protected array $queryParametersSetters = [
@@ -23,6 +26,7 @@ class DisplayMapAction extends AbstractAction
     ];
 
     protected ?float $centerLatitude = null;
+
     protected ?float $centerLongitude = null;
 
     protected ?int $zoom = null;

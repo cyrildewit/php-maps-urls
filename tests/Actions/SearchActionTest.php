@@ -1,13 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 use CyrildeWit\MapsUrls\Actions\SearchAction;
 
 it('exposes the search endpoint', function () {
-    expect((new SearchAction())->getEndpoint())->toBe(SearchAction::ENDPOINT);
+    expect((new SearchAction)->getEndpoint())->toBe(SearchAction::ENDPOINT);
 });
 
 it('builds the query parameters', function () {
-    $action = (new SearchAction())
+    $action = (new SearchAction)
         ->setQuery('Eindhoven, Nederland')
         ->setQueryPlaceId('ChIJn8N5VRvZxkcRmLlkgWTSmvM');
 
@@ -18,13 +20,13 @@ it('builds the query parameters', function () {
 });
 
 it('formats query coordinates as a comma separated pair', function () {
-    $action = (new SearchAction())->setQueryCoordinates(41, 2);
+    $action = (new SearchAction)->setQueryCoordinates(41, 2);
 
     expect($action->getQuery())->toBe('41,2');
 });
 
 it('builds null parameters when nothing is set', function () {
-    expect((new SearchAction())->getParameters())->toBe([
+    expect((new SearchAction)->getParameters())->toBe([
         'query' => null,
         'query_place_id' => null,
     ]);

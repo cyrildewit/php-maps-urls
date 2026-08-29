@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
 it('exposes the directions endpoint', function () {
-    expect((new DirectionsAction())->getEndpoint())->toBe(DirectionsAction::ENDPOINT);
+    expect((new DirectionsAction)->getEndpoint())->toBe(DirectionsAction::ENDPOINT);
 });
 
 it('builds the query parameters', function () {
-    $action = (new DirectionsAction())
+    $action = (new DirectionsAction)
         ->setOrigin('Amsterdam')
         ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
         ->setDestination('Monnickendam')
@@ -33,7 +35,7 @@ it('builds the query parameters', function () {
 });
 
 it('builds null parameters when nothing is set', function () {
-    expect((new DirectionsAction())->getParameters())->toBe([
+    expect((new DirectionsAction)->getParameters())->toBe([
         'origin' => null,
         'origin_place_id' => null,
         'destination' => null,
@@ -46,7 +48,7 @@ it('builds null parameters when nothing is set', function () {
 });
 
 it('leaves waypoints out when the list is empty', function () {
-    $action = (new DirectionsAction())
+    $action = (new DirectionsAction)
         ->setWaypoints([])
         ->setWaypointPlaceIds([]);
 
@@ -73,13 +75,13 @@ it('builds the plain options from strings and arrays', function () {
 });
 
 it('stores the travel mode', function () {
-    $action = (new DirectionsAction())->setTravelMode(TravelMode::Driving);
+    $action = (new DirectionsAction)->setTravelMode(TravelMode::Driving);
 
     expect($action->getTravelMode())->toBe(TravelMode::Driving);
 });
 
 it('stores the direction action', function () {
-    $action = (new DirectionsAction())->setDirectionAction(DirectionAction::Navigate);
+    $action = (new DirectionsAction)->setDirectionAction(DirectionAction::Navigate);
 
     expect($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });

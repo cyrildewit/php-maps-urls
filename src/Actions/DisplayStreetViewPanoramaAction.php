@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
@@ -9,6 +11,7 @@ use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
 class DisplayStreetViewPanoramaAction extends AbstractAction
 {
     const ENDPOINT = '@';
+
     const MAP_ACTION = 'pano';
 
     protected array $queryParametersSetters = [
@@ -20,6 +23,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
     ];
 
     protected ?float $viewpointLatitude = null;
+
     protected ?float $viewpointLongitude = null;
 
     protected ?string $panoramaId = null;
