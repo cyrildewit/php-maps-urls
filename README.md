@@ -275,7 +275,7 @@ $directionsAction = DirectionsAction::make([
 ]);
 ```
 
-`travelmode` and `dir_action` also accept a plain string, which `make()` resolves to an enum case without regard to casing. A string that matches no case throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+`travelmode` and `dir_action` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
 
 ```php
 $directionsAction = DirectionsAction::make([
@@ -370,7 +370,7 @@ $displayMapAction = DirectionsAction::make([
 ]);
 ```
 
-`basemap` and `layer` also accept a plain string, which `make()` resolves to an enum case without regard to casing. A string that matches no case throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+`basemap` and `layer` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
 
 #### Display a Street View panorama
 

@@ -94,9 +94,9 @@ it('stores the layer', function (): void {
     expect($action->getLayer())->toBe(Layer::Transit);
 });
 
-it('resolves enums from strings regardless of casing', function (): void {
+it('resolves enums from strings', function (): void {
     $action = DisplayMapAction::make([
-        'basemap' => 'SATELLITE',
+        'basemap' => 'satellite',
         'layer' => 'transit',
     ]);
 

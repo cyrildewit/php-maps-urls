@@ -37,7 +37,7 @@ abstract class AbstractAction
             $enum = $enums[$queryParameter] ?? null;
 
             if ($enum !== null && ! $value instanceof $enum) {
-                $value = (is_string($value) ? $enum::tryFrom(strtolower($value)) : null)
+                $value = (is_string($value) ? $enum::tryFrom($value) : null)
                     ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
             }
 
