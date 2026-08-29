@@ -413,7 +413,7 @@ The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when
 
 ###### Pitch
 
-The pitch can be defined using method `setPitch(int $degrees)`. Only values from -90 to 80 degrees are expected.
+The pitch can be defined using method `setPitch(int $degrees)`. Only values from -90 to 90 degrees are expected.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;

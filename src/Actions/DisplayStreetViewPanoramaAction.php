@@ -132,7 +132,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
      */
     public function setPitch(int $degrees): self
     {
-        $this->pitch = $this->guardRange('pitch', $degrees, -90, 80);
+        $this->pitch = $this->guardRange('pitch', $degrees, -90, 90);
 
         return $this;
     }

@@ -97,11 +97,11 @@ it('accepts a pitch within range', function (): void {
 it('accepts a pitch on the edge of the range', function (int $degrees): void {
     expect((new DisplayStreetViewPanoramaAction)->setPitch($degrees)->getPitch())
         ->toBe($degrees);
-})->with([-90, 80]);
+})->with([-90, 90]);
 
-it('rejects a pitch outside the -90 to 80 range', function (int $degrees): void {
+it('rejects a pitch outside the -90 to 90 range', function (int $degrees): void {
     (new DisplayStreetViewPanoramaAction)->setPitch($degrees);
-})->with([-91, 120])->throws(InvalidOption::class);
+})->with([-91, 91])->throws(InvalidOption::class);
 
 it('accepts a fov within range', function (): void {
     $action = (new DisplayStreetViewPanoramaAction)->setFov(40);
@@ -129,7 +129,7 @@ it('reports the accepted pitch range', function (): void {
     (new DisplayStreetViewPanoramaAction)->setPitch(120);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'pitch'. Expected from -90 to 80. Received '120'."
+    "Invalid value provided for 'pitch'. Expected from -90 to 90. Received '120'."
 );
 
 it('reports the accepted fov range', function (): void {
