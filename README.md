@@ -319,9 +319,9 @@ $displayMapAction = (new DisplayMapAction())
 The base map can be defined using method `setBaseMap(BaseMap $baseMap)`. The cases of the `CyrildeWit\MapsUrls\Enums\BaseMap` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\BaseMap::None;
-CyrildeWit\MapsUrls\Enums\BaseMap::Traffic;
-CyrildeWit\MapsUrls\Enums\BaseMap::Bicycling;
+CyrildeWit\MapsUrls\Enums\BaseMap::Roadmap;
+CyrildeWit\MapsUrls\Enums\BaseMap::Satellite;
+CyrildeWit\MapsUrls\Enums\BaseMap::Terrain;
 ```
 
 Example:
@@ -330,7 +330,7 @@ Example:
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
 
 $displayMapAction = (new DisplayMapAction())
-    ->setBaseMap(BaseMap::Traffic);
+    ->setBaseMap(BaseMap::Satellite);
 ```
 
 ###### Layer
@@ -363,7 +363,7 @@ use CyrildeWit\MapsUrls\Actions\DirectionsAction;
 $displayMapAction = DirectionsAction::make([
      'center' => [-33.8569, 151.2152],
      'zoom' => 10,
-     'basemap' => BaseMap::Bicycling,
+     'basemap' => BaseMap::Satellite,
      'layer' => Layer::Transit,
 ]);
 ```
