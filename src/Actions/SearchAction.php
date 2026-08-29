@@ -6,7 +6,7 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 class SearchAction extends AbstractAction
 {
-    const ENDPOINT = 'search/';
+    const string ENDPOINT = 'search/';
 
     /** @var array<string, string> */
     #[\Override]

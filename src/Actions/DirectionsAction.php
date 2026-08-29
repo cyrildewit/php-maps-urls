@@ -9,7 +9,7 @@ use CyrildeWit\MapsUrls\Enums\TravelMode;
 
 class DirectionsAction extends AbstractAction
 {
-    const ENDPOINT = 'dir';
+    const string ENDPOINT = 'dir';
 
     /** @var array<string, string> */
     #[\Override]

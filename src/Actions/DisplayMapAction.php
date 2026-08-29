@@ -9,9 +9,9 @@ use CyrildeWit\MapsUrls\Enums\Layer;
 
 class DisplayMapAction extends AbstractAction
 {
-    const ENDPOINT = '@';
+    const string ENDPOINT = '@';
 
-    const MAP_ACTION = 'map';
+    const string MAP_ACTION = 'map';
 
     /** @var array<string, string> */
     #[\Override]

@@ -8,9 +8,9 @@ use CyrildeWit\MapsUrls\Actions\AbstractAction;
 
 class UrlGenerator
 {
-    const BASE_URL = 'https://www.google.com/maps/';
+    const string BASE_URL = 'https://www.google.com/maps/';
 
-    const API_VERSION = '1';
+    const string API_VERSION = '1';
 
     public function __construct(protected AbstractAction $action) {}
 
