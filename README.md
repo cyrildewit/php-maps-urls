@@ -305,7 +305,9 @@ $displayMapAction = (new DisplayMapAction())
 
 ###### Zoom
 
-The zoom level of the map can be defined by using method `setZoom(int $zoom)`.
+The zoom level of the map can be defined by using method `setZoom(int $zoom)`. Only whole numbers from 0 (the whole world) to 21 (individual buildings) are expected. Google notes that the upper limit varies with the map data available at the location, so a zoom of 21 is not guaranteed everywhere.
+
+The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the zoom falls outside that range.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
