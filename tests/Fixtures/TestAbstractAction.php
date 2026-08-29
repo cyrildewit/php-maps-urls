@@ -16,7 +16,7 @@ class TestAbstractAction extends AbstractAction
 
     public ?string $stringProp = null;
 
-    public ?string $intProp = null;
+    public ?int $intProp = null;
 
     public ?float $floatProp = null;
 
