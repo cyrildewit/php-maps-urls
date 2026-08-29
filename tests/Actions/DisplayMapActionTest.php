@@ -6,6 +6,7 @@ use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 it('exposes the display map endpoint', function (): void {
     expect((new DisplayMapAction)->getEndpoint())->toBe(DisplayMapAction::ENDPOINT);
@@ -33,6 +34,19 @@ it('formats the center as a comma separated pair', function (): void {
     expect($action->getCenter())->toBe('20,40');
 });
 
+it('accepts a Coordinates instance as the center', function (): void {
+    $action = (new DisplayMapAction)->setCenter(new Coordinates(-33.8569, 151.2152));
+
+    expect($action->getCenter())->toBe('-33.8569,151.2152');
+});
+
+it('rejects a center latitude without a longitude', function (): void {
+    (new DisplayMapAction)->setCenter(-33.8569);
+})->throws(
+    InvalidOption::class,
+    "Incomplete value provided for 'center'. Expected a longitude alongside the latitude, or a Coordinates instance."
+);
+
 it('has no center until both coordinates are set', function (): void {
     $action = (new DisplayMapAction)->setCenterLatitude(40);
 
@@ -57,6 +71,12 @@ it('builds null parameters when nothing is set', function (): void {
 
 it('builds the center from options', function (): void {
     $action = DisplayMapAction::make(['center' => [52.1, 4.2]]);
+
+    expect($action->getCenter())->toBe('52.1,4.2');
+});
+
+it('builds the center from a Coordinates option', function (): void {
+    $action = DisplayMapAction::make(['center' => new Coordinates(52.1, 4.2)]);
 
     expect($action->getCenter())->toBe('52.1,4.2');
 });

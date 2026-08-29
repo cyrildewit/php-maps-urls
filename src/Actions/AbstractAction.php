@@ -6,6 +6,7 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use BackedEnum;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 use ReflectionMethod;
 
 /**
@@ -107,6 +108,25 @@ abstract class AbstractAction
     protected function setterTakesList(string $setter): bool
     {
         return new ReflectionMethod($this, $setter)->isVariadic();
+    }
+
+    /**
+     * Setters like setCenter() accept either a Coordinates instance or a
+     * separate latitude and longitude, so both call styles have to end up as
+     * one pair.
+     *
+     * @throws InvalidOption
+     */
+    protected function toCoordinates(string $queryParameter, Coordinates|float $latitude, ?float $longitude): Coordinates
+    {
+        if ($latitude instanceof Coordinates) {
+            return $latitude;
+        }
+
+        return new Coordinates(
+            $latitude,
+            $longitude ?? throw InvalidOption::missingLongitude($queryParameter),
+        );
     }
 
     /**
