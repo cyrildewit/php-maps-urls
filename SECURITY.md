@@ -50,5 +50,5 @@ If you do report an issue, please give us a reasonable amount of time to
 respond before any public disclosure.
 
 Nothing in this policy creates a warranty or legal obligation. The
-software is provided "as is" under the [Apache License 2.0](LICENSE).
+software is provided "as is" under the [MIT License](LICENSE).
 Thank you for helping keep this project and its users safe.
