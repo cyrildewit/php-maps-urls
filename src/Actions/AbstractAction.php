@@ -4,16 +4,24 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
+use BackedEnum;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 use ReflectionMethod;
 
+/**
+ * @phpstan-consistent-constructor
+ */
 abstract class AbstractAction
 {
+    /** @var array<string, string> */
     protected array $queryParametersSetters = [];
 
+    /** @var array<string, class-string<BackedEnum>> */
     protected array $queryParametersEnums = [];
 
     /**
+     * @param  array<string, mixed>  $options
+     *
      * @throws InvalidOption
      */
     public static function make(array $options): self
@@ -44,15 +52,24 @@ abstract class AbstractAction
         return $action;
     }
 
+    /**
+     * @return array<string, string|int|null>
+     */
     abstract public function getParameters(): array;
 
     abstract public function getEndpoint(): string;
 
+    /**
+     * @return array<string, string>
+     */
     public function getQueryParametersSetters(): array
     {
         return $this->queryParametersSetters;
     }
 
+    /**
+     * @return array<string, class-string<BackedEnum>>
+     */
     public function getQueryParametersEnums(): array
     {
         return $this->queryParametersEnums;

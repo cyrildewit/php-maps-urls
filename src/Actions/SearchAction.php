@@ -8,6 +8,7 @@ class SearchAction extends AbstractAction
 {
     const ENDPOINT = 'search/';
 
+    /** @var array<string, string> */
     protected array $queryParametersSetters = [
         'query' => 'setQuery',
         'query_coordinates' => 'setQueryCoordinates',
@@ -18,6 +19,9 @@ class SearchAction extends AbstractAction
 
     protected ?string $queryPlaceId = null;
 
+    /**
+     * @return array<string, string|null>
+     */
     public function getParameters(): array
     {
         return [

@@ -11,6 +11,7 @@ class DirectionsAction extends AbstractAction
 {
     const ENDPOINT = 'dir';
 
+    /** @var array<string, string> */
     protected array $queryParametersSetters = [
         'origin' => 'setOrigin',
         'origin_place_id' => 'setOriginPlaceId',
@@ -22,6 +23,7 @@ class DirectionsAction extends AbstractAction
         'waypoint_place_ids' => 'setWaypointPlaceIds',
     ];
 
+    /** @var array<string, class-string<\BackedEnum>> */
     protected array $queryParametersEnums = [
         'travelmode' => TravelMode::class,
         'dir_action' => DirectionAction::class,
@@ -39,12 +41,20 @@ class DirectionsAction extends AbstractAction
 
     protected ?DirectionAction $directionAction = null;
 
+    /** @var list<string>|null */
     protected ?array $waypoints = null;
 
+    /** @var list<string>|null */
     protected ?array $waypointPlaceIds = null;
 
+    /**
+     * @return array<string, string|null>
+     */
     public function getParameters(): array
     {
+        $waypoints = $this->getWaypoints();
+        $waypointPlaceIds = $this->getWaypointPlaceIds();
+
         return [
             'origin' => $this->getOrigin(),
             'origin_place_id' => $this->getOriginPlaceId(),
@@ -52,8 +62,8 @@ class DirectionsAction extends AbstractAction
             'destination_place_id' => $this->getDestinationPlaceId(),
             'travelmode' => $this->getTravelMode()?->value,
             'dir_action' => $this->getDirectionAction()?->value,
-            'waypoints' => $this->hasWaypoints() ? $this->formatArray($this->getWaypoints()) : null,
-            'waypoint_place_ids' => $this->hasWaypointPlaceIds() ? $this->formatArray($this->getWaypointPlaceIds()) : null,
+            'waypoints' => $waypoints ? $this->formatArray($waypoints) : null,
+            'waypoint_place_ids' => $waypointPlaceIds ? $this->formatArray($waypointPlaceIds) : null,
         ];
     }
 
@@ -92,11 +102,17 @@ class DirectionsAction extends AbstractAction
         return $this->directionAction;
     }
 
+    /**
+     * @return list<string>|null
+     */
     public function getWaypoints(): ?array
     {
         return $this->waypoints;
     }
 
+    /**
+     * @return list<string>|null
+     */
     public function getWaypointPlaceIds(): ?array
     {
         return $this->waypointPlaceIds;
@@ -154,6 +170,9 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
+    /**
+     * @param  list<string>  $waypoints
+     */
     public function setWaypoints(array $waypoints): self
     {
         $this->waypoints = $waypoints;
@@ -161,6 +180,9 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
+    /**
+     * @param  list<string>  $placeIds
+     */
     public function setWaypointPlaceIds(array $placeIds): self
     {
         $this->waypointPlaceIds = $placeIds;
@@ -168,6 +190,9 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
+    /**
+     * @param  list<string>  $values
+     */
     protected function formatArray(array $values): string
     {
         return implode('|', $values);

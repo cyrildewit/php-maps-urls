@@ -13,6 +13,7 @@ class DisplayMapAction extends AbstractAction
 
     const MAP_ACTION = 'map';
 
+    /** @var array<string, string> */
     protected array $queryParametersSetters = [
         'center' => 'setCenter',
         'zoom' => 'setZoom',
@@ -20,6 +21,7 @@ class DisplayMapAction extends AbstractAction
         'layer' => 'setLayer',
     ];
 
+    /** @var array<string, class-string<\BackedEnum>> */
     protected array $queryParametersEnums = [
         'basemap' => BaseMap::class,
         'layer' => Layer::class,
@@ -35,6 +37,9 @@ class DisplayMapAction extends AbstractAction
 
     protected ?Layer $layer = null;
 
+    /**
+     * @return array<string, string|int|null>
+     */
     public function getParameters(): array
     {
         return [
