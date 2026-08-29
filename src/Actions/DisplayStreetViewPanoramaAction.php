@@ -4,9 +4,7 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
-use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
-use CyrildeWit\MapsUrls\Exceptions\InvalidHeading;
-use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
 class DisplayStreetViewPanoramaAction extends AbstractAction
 {
@@ -119,35 +117,32 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
         return $this;
     }
 
+    /**
+     * @throws InvalidOption
+     */
     public function setHeading(int $degrees): self
     {
-        if ($degrees < -180 || $degrees > 360) {
-            throw InvalidHeading::outOfRange($degrees);
-        }
-
-        $this->heading = $degrees;
+        $this->heading = $this->guardRange('heading', $degrees, -180, 360);
 
         return $this;
     }
 
+    /**
+     * @throws InvalidOption
+     */
     public function setPitch(int $degrees): self
     {
-        if ($degrees < -90 || $degrees > 80) {
-            throw InvalidPitch::outOfRange($degrees);
-        }
-
-        $this->pitch = $degrees;
+        $this->pitch = $this->guardRange('pitch', $degrees, -90, 80);
 
         return $this;
     }
 
+    /**
+     * @throws InvalidOption
+     */
     public function setFov(int $degrees): self
     {
-        if ($degrees < 10 || $degrees > 100) {
-            throw InvalidFov::outOfRange($degrees);
-        }
-
-        $this->fov = $degrees;
+        $this->fov = $this->guardRange('fov', $degrees, 10, 100);
 
         return $this;
     }
