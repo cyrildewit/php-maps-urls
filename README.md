@@ -49,15 +49,13 @@ This package provides a convenient way to generate URLs for the Google Maps URLs
 
 ## Getting Started
 
-### Requirements
+### Version Compatibility
 
-This package requires **PHP 7.4+**.
+| Version | PHP Version |
+|---------|-------------|
+| ^2.0    | 8.5+        |
+| ^1.0    | 7.4+        |
 
-#### Version information
-
-| Version | Status         | PHP Version    |
-|---------|----------------|----------------|
-| ^1.0    | Active support | >= 7.4.0       |
 
 ### Installation
 
