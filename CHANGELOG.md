@@ -42,7 +42,6 @@ Actions are now immutable and built through their constructor with named argumen
 - Coordinates are formatted with `sprintf()` at seven decimals rather than string interpolation, which honoured the `precision` ini setting and switched to exponential notation below `1e-4`
 - The center and the viewpoint are a single `Coordinates` argument rather than a latitude and a longitude that could be set apart from each other
 - The zoom is read back as `int` rather than the `string` it was cast to
-- Migrated the test suite from PHPUnit to [Pest](https://pestphp.com/) and added PHPStan, Pint and Rector (development only; no impact on consumers)
 
 ### Fixed
 
@@ -55,18 +54,18 @@ Actions are now immutable and built through their constructor with named argumen
 
 ### Removed
 
-- Removed every setter and getter on the actions and on `UrlGenerator`, including `setAction()`, `hasWaypoints()`, `hasWaypointPlaceIds()` and `hasAvoid()`
+- Removed every setter and getter on the actions and on `UrlGenerator`, including `setAction()`, `hasWaypoints()` and `hasWaypointPlaceIds()`
 - Removed `Actions\AbstractAction`
 - Removed the `Exceptions\InvalidBaseMap`, `InvalidDirectionAction`, `InvalidFov`, `InvalidHeading`, `InvalidLayer`, `InvalidPitch` and `InvalidTravelMode` exceptions in favour of `Exceptions\InvalidOption`
 - Removed the `query_coordinates` option, which `Coordinates` replaces
 - Removed `setCenterLatitude()`, `setCenterLongitude()`, `setViewpointLatitude()` and `setViewpointLongitude()`, which made half a coordinate pair representable
-- Removed the `$travelModes`, `$directionActions`, `$baseMaps` and `$layers` allow-list properties and the `$queryParametersSetters` and `$queryParametersEnums` maps, which the enums and the constructors make redundant
+- Removed the `$travelModes`, `$directionActions`, `$baseMaps` and `$layers` allow-list properties and the `$queryParametersSetters` map, which the enums and the constructors make redundant
 
 ## [v1.0.1]
 
 ### Changed
 
-- Add support for PHP 8.2, 8.3 and 8.4
+- Added support for PHP 8.2, 8.3 and 8.4
 - Replaced the abbreviated license text with the full Apache 2.0 license
 
 ## [v1.0.0]
@@ -83,3 +82,8 @@ Actions are now immutable and built through their constructor with named argumen
 ## [v0.1.0]
 
 Initial release.
+
+[v2.0.0]: https://github.com/cyrildewit/php-maps-urls/compare/v1.0.1...v2.0.0
+[v1.0.1]: https://github.com/cyrildewit/php-maps-urls/compare/v1.0.0...v1.0.1
+[v1.0.0]: https://github.com/cyrildewit/php-maps-urls/compare/v0.1.0...v1.0.0
+[v0.1.0]: https://github.com/cyrildewit/php-maps-urls/releases/tag/v0.1.0
