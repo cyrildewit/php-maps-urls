@@ -213,11 +213,11 @@ $directionsAction = (new DirectionsAction())
 The travel mode can be defined using method `setTravelMode(TravelMode $travelMode)`. The cases of the `CyrildeWit\MapsUrls\Enums\TravelMode` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\TravelMode::Driving;
-CyrildeWit\MapsUrls\Enums\TravelMode::Walking;
-CyrildeWit\MapsUrls\Enums\TravelMode::Bicycling;
-CyrildeWit\MapsUrls\Enums\TravelMode::TwoWheeler;
-CyrildeWit\MapsUrls\Enums\TravelMode::Transit;
+TravelMode::Driving;
+TravelMode::Walking;
+TravelMode::Bicycling;
+TravelMode::TwoWheeler;
+TravelMode::Transit;
 ```
 
 `Bicycling` is human-powered. `TwoWheeler` covers motorised two-wheelers such as motorcycles, and Google only routes it in [countries where two-wheeler directions are supported](https://developers.google.com/maps/documentation/directions/get-directions#TwoWheeledVehicles). Elsewhere the link still opens, but the mode is ignored.
@@ -372,9 +372,9 @@ $displayMapAction = (new DisplayMapAction())
 The base map can be defined using method `setBaseMap(BaseMap $baseMap)`. The cases of the `CyrildeWit\MapsUrls\Enums\BaseMap` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\BaseMap::Roadmap;
-CyrildeWit\MapsUrls\Enums\BaseMap::Satellite;
-CyrildeWit\MapsUrls\Enums\BaseMap::Terrain;
+BaseMap::Roadmap;
+BaseMap::Satellite;
+BaseMap::Terrain;
 ```
 
 Example:
@@ -391,10 +391,10 @@ $displayMapAction = (new DisplayMapAction())
 The layer can be defined using method `setLayer(Layer $layer)`. The cases of the `CyrildeWit\MapsUrls\Enums\Layer` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\Layer::None;
-CyrildeWit\MapsUrls\Enums\Layer::Transit;
-CyrildeWit\MapsUrls\Enums\Layer::Traffic;
-CyrildeWit\MapsUrls\Enums\Layer::Bicycling;
+Layer::None;
+Layer::Transit;
+Layer::Traffic;
+Layer::Bicycling;
 ```
 
 Example:
