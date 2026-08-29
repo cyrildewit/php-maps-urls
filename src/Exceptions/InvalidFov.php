@@ -10,6 +10,6 @@ class InvalidFov extends Exception
 {
     public static function outOfRange(int $degrees): self
     {
-        return new static("Invalid fov provided. Expected from 10 to 100 degrees. Received '{$degrees}'.");
+        return new self("Invalid fov provided. Expected from 10 to 100 degrees. Received '{$degrees}'.");
     }
 }
