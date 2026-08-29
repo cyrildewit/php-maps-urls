@@ -28,7 +28,9 @@
         "php": "^8.5"
     },
     "require-dev": {
-        "pestphp/pest": "^5.1"
+        "laravel/pint": "^1.21",
+        "pestphp/pest": "^5.1",
+        "phpstan/phpstan": "^2.1"
     },
     "autoload": {
         "psr-4": {
@@ -41,8 +43,11 @@
         }
     },
     "scripts": {
+        "lint": "pint",
+        "test:lint": "pint --test",
         "test": "pest",
-        "test:coverage": "pest --coverage-clover build/coverage.xml -min=100"
+        "test:coverage": "pest --coverage-clover build/coverage.xml -min=100",
+        "test:types": "phpstan analyse --memory-limit=512M"
     },
     "config": {
         "allow-plugins": {
