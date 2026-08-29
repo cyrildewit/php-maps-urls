@@ -1,6 +1,6 @@
 # Well documented Makefiles
 .DEFAULT_GOAL := help
-.PHONY: help build install update lint rector test coverage types
+.PHONY: help build install update lint rector test coverage types type-coverage
 
 help:
 	@awk 'BEGIN {FS = ":.*##"; printf "\nUsage:\n  make \033[36m<target>\033[0m\n"} /^[a-zA-Z0-9_-]+:.*?##/ { printf "  \033[36m%-40s\033[0m %s\n", $$1, $$2 } /^##@/ { printf "\n\033[1m%s\033[0m\n", substr($$0, 5) } ' $(MAKEFILE_LIST)
@@ -29,3 +29,6 @@ coverage: ## Run the tests with code coverage (reports are written to build/)
 
 types: ## Run the static analysis
 	docker compose run --rm composer test:types
+
+type-coverage: ## Run the type coverage analysis
+	docker compose run --rm composer test:type-coverage
