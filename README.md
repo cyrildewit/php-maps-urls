@@ -39,6 +39,7 @@ This package provides a convenient way to generate URLs for the Google Maps URLs
     * [Installation](#installation)
 2. [Usage](#usage)
    * [Generating a URL](#generating-a-url)
+   * [Campaign tracking](#campaign-tracking)
    * [Actions](#actions)
       * [Search](#search)
       * [Directions](#directions)
@@ -81,6 +82,29 @@ $searchUrl = (new UrlGenerator($searchAction))->generate();
 ```
 
 Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven,%20Nederland`
+
+### Campaign tracking
+
+Google asks every URL to carry two tracking parameters. `utm_source` is the name of your application, and `utm_campaign` is the intent behind the link, such as `directions_request`. Set them with `setUtmSource(?string $source)` and `setUtmCampaign(?string $campaign)`.
+
+```php
+use CyrildeWit\MapsUrls\UrlGenerator;
+use CyrildeWit\MapsUrls\Actions\SearchAction;
+
+$searchAction = (new SearchAction())
+    ->setQuery('Eindhoven');
+
+$searchUrl = (new UrlGenerator($searchAction))
+    ->setUtmSource('my_app')
+    ->setUtmCampaign('search_request')
+    ->generate();
+```
+
+Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app&utm_campaign=search_request`
+
+Both are optional and independent. A parameter you never set stays out of the query string, and passing `null` removes one you set earlier without touching the other. The package will not invent a source name on your behalf.
+
+The tracking parameters survive a call to `setAction()`, so one generator can serve several actions under the same campaign.
 
 ### Actions
 
