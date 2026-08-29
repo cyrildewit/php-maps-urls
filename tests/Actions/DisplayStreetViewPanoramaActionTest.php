@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 it('exposes the panorama endpoint', function (): void {
     expect((new DisplayStreetViewPanoramaAction)->getEndpoint())
@@ -33,6 +34,20 @@ it('formats the viewpoint as a comma separated pair', function (): void {
 
     expect($action->getViewpoint())->toBe('20,40');
 });
+
+it('accepts a Coordinates instance as the viewpoint', function (): void {
+    $action = (new DisplayStreetViewPanoramaAction)
+        ->setViewpoint(new Coordinates(48.857832, 2.295226));
+
+    expect($action->getViewpoint())->toBe('48.857832,2.295226');
+});
+
+it('rejects a viewpoint latitude without a longitude', function (): void {
+    (new DisplayStreetViewPanoramaAction)->setViewpoint(48.857832);
+})->throws(
+    InvalidOption::class,
+    "Incomplete value provided for 'viewpoint'. Expected a longitude alongside the latitude, or a Coordinates instance."
+);
 
 it('has no viewpoint until both coordinates are set', function (): void {
     $action = (new DisplayStreetViewPanoramaAction)->setViewpointLongitude(40);
@@ -71,6 +86,14 @@ it('builds from options', function (): void {
         ->and($action->getHeading())->toBe(100)
         ->and($action->getPitch())->toBe(40)
         ->and($action->getFov())->toBe(20);
+});
+
+it('builds the viewpoint from a Coordinates option', function (): void {
+    $action = DisplayStreetViewPanoramaAction::make([
+        'viewpoint' => new Coordinates(48.857832, 2.295226),
+    ]);
+
+    expect($action->getViewpoint())->toBe('48.857832,2.295226');
 });
 
 it('accepts a heading within range', function (): void {
