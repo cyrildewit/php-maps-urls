@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use CyrildeWit\MapsUrls\Action;
 use CyrildeWit\MapsUrls\Actions\Search;
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 use CyrildeWit\MapsUrls\UrlGenerator;
 
 /**
@@ -92,6 +93,30 @@ it('takes the campaign for one link over the default', function (): void {
 
     expect($generator->generate(new Search(query: 'Eindhoven'), utmCampaign: 'directions_request'))
         ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app&utm_campaign=directions_request');
+});
+
+it('rejects an action that writes a parameter the generator owns', function (string $queryParameter): void {
+    new UrlGenerator()->generate(fakeAction('search/', [$queryParameter => 'oops']));
+})->with(['api', 'utm_source', 'utm_campaign'])
+    ->throws(InvalidOption::class);
+
+it('names every parameter the action should not have written', function (): void {
+    $action = fakeAction('search/', [
+        'api' => 'oops',
+        'query' => 'Eindhoven',
+        'utm_source' => 'nope',
+    ]);
+
+    $message = null;
+
+    try {
+        new UrlGenerator()->generate($action);
+    } catch (InvalidOption $invalidOption) {
+        $message = $invalidOption->getMessage();
+    }
+
+    expect($message)->toContain("'api', 'utm_source'")
+        ->and($message)->not->toContain('query');
 });
 
 it('serves several actions from one generator', function (): void {
