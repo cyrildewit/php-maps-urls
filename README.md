@@ -1,11 +1,10 @@
 # PHP Google Maps URLs
 
-[![Packagist](https://img.shields.io/packagist/v/cyrildewit/php-maps-urls.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![run-tests](https://github.com/cyrildewit/php-maps-urls/workflows/run-tests/badge.svg)](https://github.com/cyrildewit/php-maps-urls/actions)
-[![StyleCI](https://styleci.io/repos/133079607/shield?style=flat-square)](https://styleci.io/repos/133079607)
-[![Codecov branch](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls/master.svg?style=flat-square)](https://codecov.io/gh/cyrildewit/php-maps-urls)
-[![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls.svg?style=flat-square)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![License](https://img.shields.io/github/license/cyrildewit/php-maps-urls.svg?style=flat-square)](https://github.com/cyrildewit/php-maps-urls/blob/1.x/LICENSE)
+[![Latest Version](https://img.shields.io/packagist/v/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
+[![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
+[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/cyrildewit/php-maps-urls/tests.yml?label=Tests)](https://github.com/cyrildewit/php-maps-urls/actions)
+[![License](https://img.shields.io/packagist/l/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
+[![Coverage](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls.svg)](https://codecov.io/gh/cyrildewit/php-maps-urls)
 
 This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide).
 
