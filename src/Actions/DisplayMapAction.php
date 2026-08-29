@@ -6,6 +6,7 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
 class DisplayMapAction extends AbstractAction
 {
@@ -109,9 +110,16 @@ class DisplayMapAction extends AbstractAction
         return $this;
     }
 
+    /**
+     * Google notes that the upper limit can vary with the map data available at
+     * the location, so 21 is the highest zoom that is ever accepted rather than
+     * a level that always resolves.
+     *
+     * @throws InvalidOption
+     */
     public function setZoom(int $zoom): self
     {
-        $this->zoom = $zoom;
+        $this->zoom = $this->guardRange('zoom', $zoom, 0, 21);
 
         return $this;
     }

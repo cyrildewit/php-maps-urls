@@ -67,6 +67,21 @@ it('builds the zoom from options', function (): void {
     expect($action->getZoom())->toBe(12);
 });
 
+it('accepts a zoom on the edge of the range', function (int $zoom): void {
+    expect((new DisplayMapAction)->setZoom($zoom)->getZoom())->toBe($zoom);
+})->with([0, 21]);
+
+it('rejects a zoom outside the 0 to 21 range', function (int $zoom): void {
+    (new DisplayMapAction)->setZoom($zoom);
+})->with([-1, 22])->throws(InvalidOption::class);
+
+it('reports the accepted zoom range', function (): void {
+    (new DisplayMapAction)->setZoom(22);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'zoom'. Expected from 0 to 21. Received '22'."
+);
+
 it('stores the base map', function (): void {
     $action = (new DisplayMapAction)->setBaseMap(BaseMap::Satellite);
 
