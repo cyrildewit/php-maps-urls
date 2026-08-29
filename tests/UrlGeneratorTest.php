@@ -68,3 +68,64 @@ it('generates from the new action after it is swapped', function (): void {
     expect($urlGenerator->generate())
         ->toBe('https://www.google.com/maps/endpoint/?api=1&test=after');
 });
+
+it('leaves out the tracking parameters that were never set', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', ['query' => 'Eindhoven']));
+
+    expect($urlGenerator->getUtmSource())->toBeNull()
+        ->and($urlGenerator->getUtmCampaign())->toBeNull()
+        ->and($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven');
+});
+
+it('appends the tracking parameters after the parameters of the action', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('dir/', [
+        'origin' => 'Eindhoven',
+        'destination' => 'Utrecht',
+    ]));
+
+    $urlGenerator
+        ->setUtmSource('my_app')
+        ->setUtmCampaign('directions_request');
+
+    expect($urlGenerator->getUtmSource())->toBe('my_app')
+        ->and($urlGenerator->getUtmCampaign())->toBe('directions_request')
+        ->and($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/dir/?api=1&origin=Eindhoven&destination=Utrecht&utm_source=my_app&utm_campaign=directions_request');
+});
+
+it('sends one tracking parameter without the other', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', ['query' => 'Eindhoven']));
+
+    expect($urlGenerator->setUtmSource('my_app')->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app');
+
+    $urlGenerator = new UrlGenerator(fakeAction('search/', ['query' => 'Eindhoven']));
+
+    expect($urlGenerator->setUtmCampaign('search_request')->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_campaign=search_request');
+});
+
+it('drops a tracking parameter that is set back to null', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', ['query' => 'Eindhoven']));
+
+    $urlGenerator
+        ->setUtmSource('my_app')
+        ->setUtmCampaign('search_request')
+        ->setUtmCampaign(null);
+
+    expect($urlGenerator->getUtmCampaign())->toBeNull()
+        ->and($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app');
+});
+
+it('keeps the tracking parameters when the action is swapped', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', ['query' => 'Eindhoven']));
+
+    $urlGenerator
+        ->setUtmSource('my_app')
+        ->setAction(fakeAction('dir/', ['origin' => 'Eindhoven']));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/dir/?api=1&origin=Eindhoven&utm_source=my_app');
+});
