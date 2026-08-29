@@ -3,6 +3,7 @@
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use ReflectionMethod;
 
 abstract class AbstractAction
 {
@@ -30,7 +31,11 @@ abstract class AbstractAction
                         ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
                 }
 
-                call_user_func_array([$action, $setter], [$value]);
+                $arguments = is_array($value) && $action->setterTakesMultipleArguments($setter)
+                    ? $value
+                    : [$value];
+
+                $action->{$setter}(...$arguments);
             }
         }
 
@@ -49,5 +54,14 @@ abstract class AbstractAction
     public function getQueryParametersEnums(): array
     {
         return $this->queryParametersEnums;
+    }
+
+    /**
+     * Setters like setCenter() take a latitude and a longitude rather than one
+     * value, so make() has to spread the option over both parameters.
+     */
+    protected function setterTakesMultipleArguments(string $setter): bool
+    {
+        return (new ReflectionMethod($this, $setter))->getNumberOfParameters() > 1;
     }
 }
