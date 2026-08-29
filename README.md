@@ -1,18 +1,52 @@
-# PHP Google Maps URLs
+<div align="center">
+  <h3 align="center">PHP Google Maps URLs</h3>
+  <p align="center">
+    Generate URLs for the Google Maps URLs API
+  </p>
+  <br/>
+  <p align="center">
+    <a href="https://packagist.org/packages/cyrildewit/php-maps-urls"><img alt="Latest Version" src="https://img.shields.io/packagist/v/cyrildewit/php-maps-urls"/></a>
+    <a href="https://packagist.org/packages/cyrildewit/php-maps-urls"><img alt="Total Downloads" src="https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls"/></a>
+    <a href="https://github.com/cyrildewit/php-maps-urls/actions"><img alt="GitHub Actions Workflow Status" src="https://img.shields.io/github/actions/workflow/status/cyrildewit/php-maps-urls/tests.yml?label=Tests"/></a>
+    <a href="https://packagist.org/packages/cyrildewit/php-maps-urls"><img alt="License" src="https://img.shields.io/packagist/l/cyrildewit/php-maps-urls"/></a>
+    <a href="https://codecov.io/gh/cyrildewit/php-maps-urls"><img alt="Coverage" src="https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls.svg"/></a>
+  </p>
+</div>
+<hr/>
 
-[![Latest Version](https://img.shields.io/packagist/v/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![Total Downloads](https://img.shields.io/packagist/dt/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![GitHub Actions Workflow Status](https://img.shields.io/github/actions/workflow/status/cyrildewit/php-maps-urls/tests.yml?label=Tests)](https://github.com/cyrildewit/php-maps-urls/actions)
-[![License](https://img.shields.io/packagist/l/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
-[![Coverage](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls.svg)](https://codecov.io/gh/cyrildewit/php-maps-urls)
+<details>
+<summary>Table of Contents</summary>
+
+1. [Introduction](#introduction)
+2. [Getting Started](#getting-started)
+    - [Version Compatibility](#version-compatibility)
+    - [Installation](#installation)
+3. [Usage](#usage)
+    - [Generating a URL](#generating-a-url)
+    - [Campaign tracking](#campaign-tracking)
+    - [Coordinates](#coordinates)
+    - [Actions](#actions)
+        - [Creating an action from an array](#creating-an-action-from-an-array)
+        - [Search](#search)
+        - [Directions](#directions)
+        - [DisplayMap](#displaymap)
+        - [StreetViewPanorama](#streetviewpanorama)
+4. [Changelog](#changelog)
+5. [Contributing](#contributing)
+6. [Credits](#credits)
+7. [License](#license)
+
+</details>
 
 ## Introduction
 
-This package builds URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide). Every action the API supports has its own class. You construct one and hand it to `MapsUrl::for()`, which gives you a string back.
+**PHP Google Maps URLs** builds URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide). Every action the API supports has its own class. You construct one and hand it to `MapsUrl::for()`, which gives you a string back.
 
 The package only builds the URL string. It sends no HTTP request, and Google does not require an API key for Maps URLs. Opening the result launches the Google Maps app on Android and iOS when the app is installed, and a browser everywhere else.
 
-### Quick example
+### Quick Example
+
+Once installed, generating a URL looks like this:
 
 ```php
 use CyrildeWit\MapsUrls\MapsUrl;
@@ -38,56 +72,31 @@ $panoramaUrl = MapsUrl::for(new StreetViewPanorama(
 // https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=48.857832%2C2.295226
 ```
 
-### Key features
+### Key Features
 
-* A class per action: search, directions, displaying a map and Street View panoramas.
-* Actions are immutable and built with named arguments, so a misspelled parameter fails at the call site rather than producing a URL Google quietly ignores.
-* Backed enums for every fixed-value parameter.
-* A `Coordinates` value object that writes a latitude and longitude the same way on every host, whatever the `precision` ini setting is, and rejects a position that is not on Earth.
-* Campaign tracking through `UrlGenerator`, shared across every link you build with it.
-* No runtime dependencies beyond PHP itself.
-* Line coverage and type coverage held at 100% in CI.
-
-<details>
-<summary><strong>Table of contents</strong></summary>
-
-1. [Introduction](#introduction)
-    * [Quick example](#quick-example)
-    * [Key features](#key-features)
-2. [Getting Started](#getting-started)
-    * [Version Compatibility](#version-compatibility)
-    * [Installation](#installation)
-3. [Usage](#usage)
-   * [Generating a URL](#generating-a-url)
-   * [Campaign tracking](#campaign-tracking)
-   * [Coordinates](#coordinates)
-   * [Actions](#actions)
-      * [Creating an action from an array](#creating-an-action-from-an-array)
-      * [Search](#search)
-      * [Directions](#directions)
-      * [Displaying a map](#displaying-a-map)
-      * [Display a Street View panorama](#display-a-street-view-panorama)
-4. [Credits](#credits)
-5. [License](#license)
-
-</details>
+- A class per action: search, directions, displaying a map and Street View panoramas.
+- Actions are immutable and built with named arguments, so a misspelled parameter fails at the call site rather than producing a URL Google quietly ignores.
+- Backed enums for every fixed-value parameter.
+- A `Coordinates` value object that writes a latitude and longitude the same way on every host, whatever the `precision` ini setting is, and rejects a position that is not on Earth.
+- Campaign tracking through `UrlGenerator`, shared across every link you build with it.
+- No runtime dependencies beyond PHP itself.
+- Line coverage and type coverage held at 100% in CI.
 
 ## Getting Started
 
 ### Version Compatibility
 
-| Version | PHP Version |
-|---------|-------------|
-| ^2.0    | 8.5+        |
-| ^1.0    | 7.4+        |
-
+| Package Version                                                        | PHP  |
+|------------------------------------------------------------------------|------|
+| [2.x](https://packagist.org/packages/cyrildewit/php-maps-urls#2.x-dev) | 8.5+ |
+| [1.x](https://packagist.org/packages/cyrildewit/php-maps-urls#1.x-dev) | 7.4+ |
 
 ### Installation
 
-You can install this package via Composer using:
+First, you need to install the package via Composer:
 
 ```sh
-composer require cyrildewit/php-maps-urls
+composer require cyrildewit/php-maps-urls:^2
 ```
 
 ## Usage
@@ -101,24 +110,10 @@ use CyrildeWit\MapsUrls\MapsUrl;
 use CyrildeWit\MapsUrls\Actions\Search;
 
 $searchUrl = MapsUrl::for(new Search(query: 'Eindhoven, Nederland'));
+// https://www.google.com/maps/search/?api=1&query=Eindhoven%2C+Nederland
 ```
 
-Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven%2C+Nederland`
-
-The query string is built with `http_build_query()`, so a space becomes `+` and a comma becomes `%2C`. Google reads both.
-
-Every action implements `CyrildeWit\MapsUrls\Action`, is `final readonly`, and takes all of its parameters through the constructor. Pass them as named arguments and leave out the ones you do not need. There are no setters, so an action is safe to build once and reuse anywhere.
-
-The interface has two methods, `endpoint()` and `parameters()`, so you can write your own action for a parameter Google ships before this package catches up. The generator writes `api`, `utm_source` and `utm_campaign` itself, and an action returning one of those throws `InvalidOption` rather than quietly winning or losing the collision.
-
-The parameters are public, so you can read back what an action holds. This is useful for inspecting or testing an action before you generate.
-
-```php
-$action = new Search(query: 'Eindhoven, Nederland');
-
-$action->query;         // 'Eindhoven, Nederland'
-$action->parameters();  // ['query' => 'Eindhoven, Nederland', 'query_place_id' => null]
-```
+Pass the parameters as named arguments and leave out the ones you do not need.
 
 ### Campaign tracking
 
@@ -137,14 +132,14 @@ $searchUrl = $maps->generate(
     new Search(query: 'Eindhoven'),
     utmCampaign: 'search_request',
 );
+// https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app&utm_campaign=search_request
 
 $directionsUrl = $maps->generate(
     new Directions(origin: 'Eindhoven', destination: 'Utrecht'),
     utmCampaign: 'directions_request',
 );
+// https://www.google.com/maps/dir/?api=1&origin=Eindhoven&destination=Utrecht&utm_source=my_app&utm_campaign=directions_request
 ```
-
-Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven&utm_source=my_app&utm_campaign=search_request`
 
 The campaign describes one link, so `generate()` takes it per call. Pass `utmCampaign` to the constructor as well if most of your links share one, and the argument to `generate()` overrides it.
 
@@ -165,7 +160,11 @@ $action = new Search(query: new Coordinates(47.5951518, -122.3316393));
 
 `Coordinates` writes the pair with at most seven decimals, the precision Google uses in its own examples, which resolves to about a centimetre. It drops trailing zeros, so `new Coordinates(41, 2)` becomes `41,2`, and it rounds away anything below the seventh decimal.
 
-Format the pair through this class rather than interpolating the floats yourself. Casting a float to a string honours the `precision` ini setting, so a host running `precision=6` writes `47.5951518` as `47.5952`, a ten metre error in a URL that still looks right. The cast also switches to exponential notation below `1e-4`, and Google does not read `1.0E-7` as a latitude.
+> [!WARNING]
+> Format the pair through this class rather than interpolating the floats yourself. Casting a float to a string
+> honours the `precision` ini setting, so a host running `precision=6` writes `47.5951518` as `47.5952`, a ten metre
+> error in a URL that still looks right. The cast also switches to exponential notation below `1e-4`, and Google does
+> not read `1.0E-7` as a latitude.
 
 A latitude outside -90 to 90 or a longitude outside -180 to 180 throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`. A longitude past the antimeridian wraps back around the globe and Google reads it, so `Coordinates::unchecked()` skips the check for anyone who has one and would rather not normalise it first.
 
@@ -191,17 +190,24 @@ $action = Search::fromArray([
 
 The same rules apply to every action:
 
-* An unknown key throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`, and the message lists the keys that action does accept.
-* A value of the wrong type throws `InvalidOption` rather than a `TypeError`.
-* A parameter backed by an enum takes an enum case or the plain string behind it. The string has to match the case exactly, so `'driving'` works and `'Driving'` throws.
-* A parameter that takes a list, such as `avoid` or `waypoints`, also accepts a single value on its own.
-* Anywhere coordinates are accepted, you can pass a [`Coordinates`](#coordinates) instance or a two element `[latitude, longitude]` array. A keyed array is rejected, because reading it in the wrong order swaps the two and still produces a URL that loads.
+- An unknown key throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`, and the message lists the keys that action does accept.
+- A value of the wrong type throws `InvalidOption` rather than a `TypeError`.
+- A parameter backed by an enum takes an enum case or the plain string behind it. The string has to match the case exactly, so `'driving'` works and `'Driving'` throws.
+- A parameter that takes a list, such as `avoid` or `waypoints`, also accepts a single value on its own.
+- Anywhere coordinates are accepted, you can pass a [`Coordinates`](#coordinates) instance or a two element `[latitude, longitude]` array.
+
+> [!NOTE]
+> A keyed coordinates array is rejected, because reading it in the wrong order swaps the latitude and the longitude and
+> still produces a URL that loads.
 
 Each action lists its own keys below.
 
 #### Search
 
-From the official documentation: "Launch a Google Map that displays a pin for a specific place, or perform a general search and launch a map to display the results."
+> Launch a Google Map that displays a pin for a specific place, or perform a general search and launch a map to
+> display the results.
+>
+> [Google Maps URLs documentation](https://developers.google.com/maps/documentation/urls/get-started#search-action)
 
 `CyrildeWit\MapsUrls\Actions\Search` takes:
 
@@ -224,18 +230,26 @@ $action = new Search(
 $action = new Search(query: new Coordinates(47.5951518, -122.3316393));
 ```
 
+##### Creating from an array
+
 See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
-$action = Search::fromArray([
+use CyrildeWit\MapsUrls\MapsUrl;
+use CyrildeWit\MapsUrls\Actions\Search;
+
+$searchUrl = MapsUrl::for(Search::fromArray([
     'query' => 'Eindhoven, Nederland',
     'query_place_id' => 'ChIJn8N5VRvZxkcRmLlkgWTSmvM',
-]);
+]));
+// https://www.google.com/maps/search/?api=1&query=Eindhoven%2C+Nederland&query_place_id=ChIJn8N5VRvZxkcRmLlkgWTSmvM
 ```
 
 #### Directions
 
-From the official documentation: "Request directions and launch Google Maps with the results."
+> Request directions and launch Google Maps with the results.
+>
+> [Google Maps URLs documentation](https://developers.google.com/maps/documentation/urls/get-started#directions-action)
 
 `CyrildeWit\MapsUrls\Actions\Directions` takes:
 
@@ -296,7 +310,11 @@ The origin and the destination are both optional. Leaving the origin out asks Go
 
 ##### Waypoints and their place IDs
 
-Google matches the two lists by position, so the first place ID belongs to the first waypoint. Passing a different number of place IDs than waypoints throws `InvalidOption`, because a short list shifts every waypoint after it onto the wrong ID and the route that comes back still looks plausible. Leaving the place IDs out entirely is fine.
+Google matches the two lists by position, so the first place ID belongs to the first waypoint. Leaving the place IDs out entirely is fine.
+
+> [!WARNING]
+> Passing a different number of place IDs than waypoints throws `InvalidOption`. A short list shifts every waypoint
+> after it onto the wrong ID, and the route that comes back still looks plausible.
 
 Google supports up to nine waypoints, and up to three when the link opens in a mobile browser. The package does not enforce either, since which one applies depends on where the link is opened.
 
@@ -329,9 +347,10 @@ Google treats these as a preference rather than a rule. A route that cannot avoi
 See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
+use CyrildeWit\MapsUrls\MapsUrl;
 use CyrildeWit\MapsUrls\Actions\Directions;
 
-$action = Directions::fromArray([
+$directionsUrl = MapsUrl::for(Directions::fromArray([
     'origin' => 'Eindhoven, Nederland',
     'origin_place_id' => 'ChIJn8N5VRvZxkcRmLlkgWTSmvM',
     'destination' => 'Monnickendam, Nederland',
@@ -340,12 +359,15 @@ $action = Directions::fromArray([
     'dir_action' => 'navigate',
     'waypoints' => ['Berlin,Germany', [48.8566, 2.3522]],
     'avoid' => 'tolls',
-]);
+]));
+// https://www.google.com/maps/dir/?api=1&origin=Eindhoven%2C+Nederland&origin_place_id=ChIJn8N5VRvZxkcRmLlkgWTSmvM&destination=Monnickendam%2C+Nederland&destination_place_id=ChIJTZfQeLgFxkcRQhAYGf9HbrU&travelmode=driving&dir_action=navigate&waypoints=Berlin%2CGermany%7C48.8566%2C2.3522&avoid=tolls
 ```
 
-#### Displaying a map
+#### DisplayMap
 
-From the official documentation: "Launch Google Maps with no markers or directions."
+> Launch Google Maps with no markers or directions.
+>
+> [Google Maps URLs documentation](https://developers.google.com/maps/documentation/urls/get-started#map-action)
 
 `CyrildeWit\MapsUrls\Actions\DisplayMap` takes:
 
@@ -397,7 +419,9 @@ Layer::Traffic;
 Layer::Bicycling;
 ```
 
-`Layer::None` writes `layer=none`, which asks Google for a map with no layer on top. Leaving the layer unset omits the parameter instead. The two are not the same request, though they usually render the same map.
+> [!NOTE]
+> `Layer::None` writes `layer=none`, which asks Google for a map with no layer on top. Leaving the layer unset omits
+> the parameter instead. The two are not the same request, though they usually render the same map.
 
 ##### Creating from an array
 
@@ -408,18 +432,19 @@ use CyrildeWit\MapsUrls\MapsUrl;
 use CyrildeWit\MapsUrls\Actions\DisplayMap;
 
 $displayMapUrl = MapsUrl::for(DisplayMap::fromArray([
-     'center' => [-33.8569, 151.2152],
-     'zoom' => 10,
-     'basemap' => 'satellite',
-     'layer' => 'transit',
+    'center' => [-33.8569, 151.2152],
+    'zoom' => 10,
+    'basemap' => 'satellite',
+    'layer' => 'transit',
 ]));
+// https://www.google.com/maps/@?api=1&map_action=map&center=-33.8569%2C151.2152&zoom=10&basemap=satellite&layer=transit
 ```
 
-Output `$displayMapUrl`: `https://www.google.com/maps/@?api=1&map_action=map&center=-33.8569%2C151.2152&zoom=10&basemap=satellite&layer=transit`
+#### StreetViewPanorama
 
-#### Display a Street View panorama
-
-From the official documentation: "Launch an interactive panorama image."
+> Launch an interactive panorama image.
+>
+> [Google Maps URLs documentation](https://developers.google.com/maps/documentation/urls/get-started#street-view-action)
 
 `CyrildeWit\MapsUrls\Actions\StreetViewPanorama` takes:
 
@@ -465,9 +490,8 @@ $panoramaUrl = MapsUrl::for(StreetViewPanorama::fromArray([
     'pitch' => 40,
     'fov' => 80,
 ]));
+// https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=48.857832%2C2.295226&pano=tu510ie_z4ptBZYo2BGEJg&heading=120&pitch=40&fov=80
 ```
-
-Output `$panoramaUrl`: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=48.857832%2C2.295226&pano=tu510ie_z4ptBZYo2BGEJg&heading=120&pitch=40&fov=80`
 
 ## Changelog
 
