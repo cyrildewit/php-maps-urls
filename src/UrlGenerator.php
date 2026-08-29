@@ -30,13 +30,14 @@ class UrlGenerator
     }
 
     /**
-     * @return array<string, string|int|null>
+     * @return array<string, string|int>
      */
     protected function collectParameters(): array
     {
         $actionParameters = $this->action->getParameters();
+        $parameters = array_merge($this->getDefaultParameters(), $actionParameters);
 
-        return array_merge($this->getDefaultParameters(), $actionParameters);
+        return array_filter($parameters, static fn (string|int|null $value): bool => $value !== null);
     }
 
     /**
@@ -50,7 +51,7 @@ class UrlGenerator
     }
 
     /**
-     * @param  array<string, string|int|null>  $parameters
+     * @param  array<string, string|int>  $parameters
      */
     protected function formatQueryString(array $parameters): string
     {

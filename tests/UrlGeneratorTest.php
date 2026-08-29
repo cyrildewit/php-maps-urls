@@ -46,6 +46,17 @@ it('leaves null parameters out of the query string', function (): void {
         ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven');
 });
 
+it('keeps parameters whose value is zero or an empty string', function (): void {
+    $urlGenerator = new UrlGenerator(fakeAction('endpoint/', [
+        'zoom' => 0,
+        'heading' => 0,
+        'query' => '',
+    ]));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/endpoint/?api=1&zoom=0&heading=0&query=');
+});
+
 it('generates from the new action after it is swapped', function (): void {
     $urlGenerator = new UrlGenerator(fakeAction('endpoint/', ['test' => 'before']));
 
