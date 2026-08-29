@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 use Override;
 
 class SearchAction extends AbstractAction
@@ -14,7 +15,6 @@ class SearchAction extends AbstractAction
     #[Override]
     protected array $queryParametersSetters = [
         'query' => 'setQuery',
-        'query_coordinates' => 'setQueryCoordinates',
         'query_place_id' => 'setQueryPlaceId',
     ];
 
@@ -48,16 +48,9 @@ class SearchAction extends AbstractAction
         return $this->queryPlaceId;
     }
 
-    public function setQuery(string $query): self
+    public function setQuery(string|Coordinates $query): self
     {
-        $this->query = $query;
-
-        return $this;
-    }
-
-    public function setQueryCoordinates(float $latitude, float $longitude): self
-    {
-        $this->query = "{$latitude},{$longitude}";
+        $this->query = (string) $query;
 
         return $this;
     }
