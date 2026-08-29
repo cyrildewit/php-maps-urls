@@ -19,4 +19,4 @@ test: ## Run the tests
 	docker compose run --rm composer test
 
 coverage: ## Run the tests with code coverage (reports are written to build/)
-	docker compose run --rm -e XDEBUG_MODE=coverage composer test
+	docker compose run --rm -e XDEBUG_MODE=coverage composer test:coverage
