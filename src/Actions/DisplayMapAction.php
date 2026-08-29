@@ -61,7 +61,7 @@ class DisplayMapAction extends AbstractAction
         return "{$this->centerLatitude},{$this->centerLongitude}";
     }
 
-    public function getZoom(): ?string
+    public function getZoom(): ?int
     {
         return $this->zoom;
     }
@@ -100,7 +100,7 @@ class DisplayMapAction extends AbstractAction
 
     public function setZoom(int $zoom): self
     {
-        $this->zoom = "{$zoom}";
+        $this->zoom = $zoom;
 
         return $this;
     }
