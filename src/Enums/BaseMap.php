@@ -2,9 +2,9 @@
 
 namespace CyrildeWit\MapsUrls\Enums;
 
-class BaseMap
+enum BaseMap: string
 {
-    const NONE = 'none';
-    const TRAFFIC = 'traffic';
-    const BICYCLING = 'bicycling';
+    case None = 'none';
+    case Traffic = 'traffic';
+    case Bicycling = 'bicycling';
 }
