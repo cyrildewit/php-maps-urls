@@ -1,77 +1,58 @@
 <?php
 
-namespace CyrildeWit\MapsUrls\Tests;
-
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
 use CyrildeWit\MapsUrls\UrlGenerator;
-use PHPUnit\Framework\TestCase;
 
-class UrlGeneratorTest extends TestCase
+function fakeAction(string $endpoint, array $parameters = []): AbstractAction
 {
-    public function testGenerate()
+    return new class($endpoint, $parameters) extends AbstractAction
     {
-        $urlGenerator = new UrlGenerator(new class extends AbstractAction
+        public function __construct(
+            private string $endpoint,
+            private array $parameters,
+        ) {
+        }
+
+        public function getEndpoint(): string
         {
-            public function getEndpoint(): string
-            {
-                return 'search/';
-            }
+            return $this->endpoint;
+        }
 
-            public function getParameters(): array
-            {
-                return [
-                    'test' => 'test',
-                    'foo' => 'bar',
-                ];
-            }
-        });
-
-        $this->assertEquals(
-            'https://www.google.com/maps/search/?api=1&test=test&foo=bar',
-            $urlGenerator->generate()
-        );
-    }
-
-    public function testSetAction()
-    {
-        $urlGenerator = new UrlGenerator(new class extends AbstractAction
+        public function getParameters(): array
         {
-            public function getEndpoint(): string
-            {
-                return 'endpoint/';
-            }
-
-            public function getParameters(): array
-            {
-                return [
-                    'test' => 'before',
-                ];
-            }
-        });
-
-        $this->assertEquals(
-            'https://www.google.com/maps/endpoint/?api=1&test=before',
-            $urlGenerator->generate()
-        );
-
-        $urlGenerator->setAction(new class extends AbstractAction
-        {
-            public function getEndpoint(): string
-            {
-                return 'endpoint/';
-            }
-
-            public function getParameters(): array
-            {
-                return [
-                    'test' => 'after',
-                ];
-            }
-        });
-
-        $this->assertEquals(
-            'https://www.google.com/maps/endpoint/?api=1&test=after',
-            $urlGenerator->generate()
-        );
-    }
+            return $this->parameters;
+        }
+    };
 }
+
+it('builds a url from the endpoint and parameters of its action', function () {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', [
+        'test' => 'test',
+        'foo' => 'bar',
+    ]));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&test=test&foo=bar');
+});
+
+it('leaves null parameters out of the query string', function () {
+    $urlGenerator = new UrlGenerator(fakeAction('search/', [
+        'query' => 'Eindhoven',
+        'query_place_id' => null,
+    ]));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/search/?api=1&query=Eindhoven');
+});
+
+it('generates from the new action after it is swapped', function () {
+    $urlGenerator = new UrlGenerator(fakeAction('endpoint/', ['test' => 'before']));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/endpoint/?api=1&test=before');
+
+    $urlGenerator->setAction(fakeAction('endpoint/', ['test' => 'after']));
+
+    expect($urlGenerator->generate())
+        ->toBe('https://www.google.com/maps/endpoint/?api=1&test=after');
+});
