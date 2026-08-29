@@ -31,22 +31,21 @@ abstract class AbstractAction
         $enums = $action->getQueryParametersEnums();
 
         foreach ($options as $queryParameter => $value) {
-            if (isset($setters[$queryParameter])) {
-                $setter = $setters[$queryParameter];
+            $setter = $setters[$queryParameter]
+                ?? throw InvalidOption::unknownOption($queryParameter, array_keys($setters));
 
-                if (is_string($value) && isset($enums[$queryParameter])) {
-                    $enum = $enums[$queryParameter];
+            if (is_string($value) && isset($enums[$queryParameter])) {
+                $enum = $enums[$queryParameter];
 
-                    $value = $enum::tryFrom(strtolower($value))
-                        ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
-                }
-
-                $arguments = is_array($value) && $action->setterTakesMultipleArguments($setter)
-                    ? $value
-                    : [$value];
-
-                $action->{$setter}(...$arguments);
+                $value = $enum::tryFrom(strtolower($value))
+                    ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
             }
+
+            $arguments = is_array($value) && $action->setterTakesMultipleArguments($setter)
+                ? $value
+                : [$value];
+
+            $action->{$setter}(...$arguments);
         }
 
         return $action;

@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 use CyrildeWit\MapsUrls\Tests\Fixtures\TestAbstractAction;
 
 it('passes each option to its mapped setter', function (): void {
@@ -18,14 +19,15 @@ it('passes each option to its mapped setter', function (): void {
         ->and($action->getArrayProp())->toBe(['foo', 'bar']);
 });
 
-it('ignores options without a mapped setter', function (): void {
-    $action = TestAbstractAction::make([
+it('rejects an option without a mapped setter', function (): void {
+    TestAbstractAction::make([
         'string' => 'foo',
         'unmapped' => 'bar',
     ]);
-
-    expect($action->getStringProp())->toBe('foo');
-});
+})->throws(
+    InvalidOption::class,
+    "Unknown option 'unmapped'. Expected one of 'string', 'int', 'float', 'array', 'pair'."
+);
 
 it('spreads an array over a setter that takes more than one argument', function (): void {
     $action = TestAbstractAction::make(['pair' => [52.1, 4.2]]);
