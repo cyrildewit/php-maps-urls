@@ -10,6 +10,6 @@ class InvalidPitch extends Exception
 {
     public static function outOfRange(int $degrees): self
     {
-        return new static("Invalid pitch provided. Expected from -90 to 80 degrees. Received '{$degrees}'.");
+        return new self("Invalid pitch provided. Expected from -90 to 80 degrees. Received '{$degrees}'.");
     }
 }
