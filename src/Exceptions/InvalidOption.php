@@ -34,4 +34,9 @@ class InvalidOption extends Exception
     {
         return new self("Invalid value provided for '{$queryParameter}'. Expected from {$min} to {$max}. Received '{$value}'.");
     }
+
+    public static function missingLongitude(string $queryParameter): self
+    {
+        return new self("Incomplete value provided for '{$queryParameter}'. Expected a longitude alongside the latitude, or a Coordinates instance.");
+    }
 }

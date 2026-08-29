@@ -8,6 +8,7 @@ use BackedEnum;
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 use Override;
 
 class DisplayMapAction extends AbstractAction
@@ -72,7 +73,7 @@ class DisplayMapAction extends AbstractAction
             return null;
         }
 
-        return "{$this->centerLatitude},{$this->centerLongitude}";
+        return (string) new Coordinates($this->centerLatitude, $this->centerLongitude);
     }
 
     public function getZoom(): ?int
@@ -90,10 +91,15 @@ class DisplayMapAction extends AbstractAction
         return $this->layer;
     }
 
-    public function setCenter(float $latitude, float $longitude): self
+    /**
+     * @throws InvalidOption
+     */
+    public function setCenter(Coordinates|float $latitude, ?float $longitude = null): self
     {
-        $this->setCenterLatitude($latitude);
-        $this->setCenterLongitude($longitude);
+        $center = $this->toCoordinates('center', $latitude, $longitude);
+
+        $this->setCenterLatitude($center->latitude);
+        $this->setCenterLongitude($center->longitude);
 
         return $this;
     }
