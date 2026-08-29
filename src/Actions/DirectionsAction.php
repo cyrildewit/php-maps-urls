@@ -11,7 +11,7 @@ use Override;
 
 class DirectionsAction extends AbstractAction
 {
-    const string ENDPOINT = 'dir';
+    const string ENDPOINT = 'dir/';
 
     /** @var array<string, string> */
     #[Override]
