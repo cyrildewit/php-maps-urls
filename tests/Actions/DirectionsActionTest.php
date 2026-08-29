@@ -3,9 +3,9 @@
 namespace CyrildeWit\MapsUrls\Tests\Actions;
 
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
-use CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction;
-use CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode;
+use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 use PHPUnit\Framework\TestCase;
 
 class DirectionsActionTest extends TestCase
@@ -24,8 +24,8 @@ class DirectionsActionTest extends TestCase
             ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
             ->setDestination('Monnickendam')
             ->setDestinationPlaceId('abcdefghijklmnopqrstuvwxyz')
-            ->setTravelmode('walking')
-            ->setDirectionAction('navigate')
+            ->setTravelMode(TravelMode::Walking)
+            ->setDirectionAction(DirectionAction::Navigate)
             ->setWaypoints(['Rotterdam', 'Utrecht'])
             ->setWaypointPlaceIds(['abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz']);
 
@@ -43,29 +43,52 @@ class DirectionsActionTest extends TestCase
 
     public function testSetTravelMode()
     {
-        $action = (new DirectionsAction())->setTravelmode(TravelMode::DRIVING);
+        $action = (new DirectionsAction())->setTravelMode(TravelMode::Driving);
 
-        $this->assertEquals(TravelMode::DRIVING, $action->getTravelmode());
-    }
-
-    public function testSetTravelModeReturnsException()
-    {
-        $this->expectException(InvalidTravelMode::class);
-
-        (new DirectionsAction())->setTravelmode('unsupported');
+        $this->assertEquals(TravelMode::Driving, $action->getTravelMode());
     }
 
     public function testSetDirectionAction()
     {
-        $action = (new DirectionsAction())->setDirectionAction('navigate');
+        $action = (new DirectionsAction())->setDirectionAction(DirectionAction::Navigate);
 
-        $this->assertEquals('navigate', $action->getDirectionAction());
+        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
     }
 
-    public function testSetDirectionActionReturnsException()
+    public function testMakeResolvesEnumsFromStrings()
     {
-        $this->expectException(InvalidDirectionAction::class);
+        $action = DirectionsAction::make([
+            'travelmode' => 'WALKING',
+            'dir_action' => 'navigate',
+        ]);
 
-        (new DirectionsAction())->setDirectionAction('unsupported');
+        $this->assertEquals(TravelMode::Walking, $action->getTravelMode());
+        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
+    }
+
+    public function testMakeAcceptsEnumInstances()
+    {
+        $action = DirectionsAction::make([
+            'travelmode' => TravelMode::Transit,
+            'dir_action' => DirectionAction::Navigate,
+        ]);
+
+        $this->assertEquals(TravelMode::Transit, $action->getTravelMode());
+        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
+    }
+
+    public function testMakeThrowsOnUnsupportedTravelMode()
+    {
+        $this->expectException(InvalidOption::class);
+        $this->expectExceptionMessage("Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 'unsupported'.");
+
+        DirectionsAction::make(['travelmode' => 'unsupported']);
+    }
+
+    public function testMakeThrowsOnUnsupportedDirectionAction()
+    {
+        $this->expectException(InvalidOption::class);
+
+        DirectionsAction::make(['dir_action' => 'unsupported']);
     }
 }

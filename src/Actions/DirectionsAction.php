@@ -4,8 +4,6 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
-use CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction;
-use CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode;
 
 class DirectionsAction extends AbstractAction
 {
@@ -22,15 +20,9 @@ class DirectionsAction extends AbstractAction
         'waypoint_place_ids' => 'setWaypointPlaceIds',
     ];
 
-    protected array $travelModes = [
-        TravelMode::DRIVING,
-        TravelMode::WALKING,
-        TravelMode::BICYCLING,
-        TravelMode::TRANSIT,
-    ];
-
-    protected array $directionActions = [
-        DirectionAction::NAVIGATE,
+    protected array $queryParametersEnums = [
+        'travelmode' => TravelMode::class,
+        'dir_action' => DirectionAction::class,
     ];
 
     protected ?string $origin = null;
@@ -41,9 +33,9 @@ class DirectionsAction extends AbstractAction
 
     protected ?string $destinationPlaceId = null;
 
-    protected ?string $travelMode = null;
+    protected ?TravelMode $travelMode = null;
 
-    protected ?string $directionAction = null;
+    protected ?DirectionAction $directionAction = null;
 
     protected ?array $waypoints = null;
 
@@ -56,8 +48,8 @@ class DirectionsAction extends AbstractAction
             'origin_place_id' => $this->getOriginPlaceId(),
             'destination' => $this->getDestination(),
             'destination_place_id' => $this->getDestinationPlaceId(),
-            'travelmode' => $this->getTravelMode(),
-            'dir_action' => $this->getDirectionAction(),
+            'travelmode' => $this->getTravelMode()?->value,
+            'dir_action' => $this->getDirectionAction()?->value,
             'waypoints' => $this->hasWaypoints() ? $this->formatArray($this->getWaypoints()) : null,
             'waypoint_place_ids' => $this->hasWaypointPlaceIds() ? $this->formatArray($this->getWaypointPlaceIds()) : null,
         ];
@@ -88,12 +80,12 @@ class DirectionsAction extends AbstractAction
         return $this->destinationPlaceId;
     }
 
-    public function getTravelMode(): ?string
+    public function getTravelMode(): ?TravelMode
     {
         return $this->travelMode;
     }
 
-    public function getDirectionAction(): ?string
+    public function getDirectionAction(): ?DirectionAction
     {
         return $this->directionAction;
     }
@@ -146,23 +138,15 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
-    public function setTravelMode(string $travelMode): self
+    public function setTravelMode(TravelMode $travelMode): self
     {
-        if ($this->invalidTravelmode($travelMode)) {
-            throw InvalidTravelMode::unsupportedTravelModel($travelMode);
-        }
-
         $this->travelMode = $travelMode;
 
         return $this;
     }
 
-    public function setDirectionAction(string $directionAction): self
+    public function setDirectionAction(DirectionAction $directionAction): self
     {
-        if ($this->invalidDirectionAction($directionAction)) {
-            throw InvalidDirectionAction::unsupportedDirectionAction($directionAction);
-        }
-
         $this->directionAction = $directionAction;
 
         return $this;
@@ -180,16 +164,6 @@ class DirectionsAction extends AbstractAction
         $this->waypointPlaceIds = $placeIds;
 
         return $this;
-    }
-
-    protected function invalidTravelMode(string $travelMode): bool
-    {
-        return ! in_array(strtolower($travelMode), $this->travelModes);
-    }
-
-    protected function invalidDirectionAction(string $directionAction): bool
-    {
-        return ! in_array(strtolower($directionAction), $this->directionActions);
     }
 
     protected function formatArray(array $values): string
