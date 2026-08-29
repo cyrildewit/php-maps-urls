@@ -188,47 +188,34 @@ $directionsAction = (new DirectionsAction())
 
 ###### Travel Mode
 
-The travel mode can be defined using method `setTravelMode(string $travelmode)`. The valid options are:
-
-* `driving`
-* `walking`
-* `bicycling`
-* `transit`
-
-These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\TravelMode`.
+The travel mode can be defined using method `setTravelMode(TravelMode $travelMode)`. The cases of the `CyrildeWit\MapsUrls\Enums\TravelMode` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\TravelMode::DRIVING;
-CyrildeWit\MapsUrls\Enums\TravelMode::WALKING;
-CyrildeWit\MapsUrls\Enums\TravelMode::BICYCLING;
-CyrildeWit\MapsUrls\Enums\TravelMode::TRANSIT;
+CyrildeWit\MapsUrls\Enums\TravelMode::Driving;
+CyrildeWit\MapsUrls\Enums\TravelMode::Walking;
+CyrildeWit\MapsUrls\Enums\TravelMode::Bicycling;
+CyrildeWit\MapsUrls\Enums\TravelMode::Transit;
 ```
 
 Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
-use CyrildeWit\MapsUrls\Enums\TravelMode;
 
 $directionsAction = (new DirectionsAction())
-    ->setTravelmode(TravelMode::BICYCLING);
+    ->setTravelMode(TravelMode::Bicycling);
 ```
-
-The `CyrildeWit\MapsUrls\Exceptions\InvalidTravelMode` exception will be thrown when an invalid travel mode is provided.
 
 ###### Direction Action
 
-The direction action can be defined using method `setDirectionAction(string $directionAction)`. The only valid option is `navigate`. You can use the `NAVIGATE` constant in `DirectionAction` class for convenience.
+The direction action can be defined using method `setDirectionAction(DirectionAction $directionAction)`. The `CyrildeWit\MapsUrls\Enums\DirectionAction` enum has one case, `Navigate`.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
-use CyrildeWit\MapsUrls\Enums\DirectionAction;
 
 $directionsAction = (new DirectionsAction())
-    ->setDirectionAction(DirectionAction::NAVIGATE);
+    ->setDirectionAction(DirectionAction::Navigate);
 ```
-
-The `CyrildeWit\MapsUrls\Exceptions\InvalidDirectionAction` exception will be thrown when an invalid direction action is provided.
 
 ###### Waypoints
 
@@ -268,16 +255,14 @@ To instantiate a directions action with initial query parameters values, you can
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
-use CyrildeWit\MapsUrls\Enums\TravelMode;
-use CyrildeWit\MapsUrls\Enums\DirectionAction;
 
 $directionsAction = DirectionsAction::make([
     'origin' => 'Eindhoven, Nederland',
     'origin_place_id' => 'ChIJn8N5VRvZxkcRmLlkgWTSmvM',
     'destination' => 'Monnickendam, Nederland',
     'destination_place_id' => 'ChIJTZfQeLgFxkcRQhAYGf9HbrU',
-    'travelmode' => TravelMode::DRIVING,
-    'dir_action' => DirectionAction::NAVIGATE,
+    'travelmode' => TravelMode::Driving,
+    'dir_action' => DirectionAction::Navigate,
     'waypoints' => [
         'Berlin,Germany',
         'Paris,France'
@@ -286,6 +271,15 @@ $directionsAction = DirectionsAction::make([
         'ChIJAVkDPzdOqEcRcDteW0YgIQQ',
         'ChIJD7fiBh9u5kcRYJSMaMOCCwQ'
     ],
+]);
+```
+
+`travelmode` and `dir_action` also accept a plain string, which `make()` resolves to an enum case without regard to casing. A string that matches no case throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+
+```php
+$directionsAction = DirectionsAction::make([
+    'travelmode' => 'driving',
+    'dir_action' => 'navigate',
 ]);
 ```
 
@@ -321,61 +315,42 @@ $displayMapAction = (new DisplayMapAction())
 
 ###### Base Map
 
-The base map can be defined using method `setBaseMap(string $baseMap)`. The valid options are:
-
-* `none`
-* `traffic`
-* `bicycling`
-
-These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\TravelMode`.
+The base map can be defined using method `setBaseMap(BaseMap $baseMap)`. The cases of the `CyrildeWit\MapsUrls\Enums\BaseMap` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\BaseMap::NONE;
-CyrildeWit\MapsUrls\Enums\BaseMap::TRAFFIC;
-CyrildeWit\MapsUrls\Enums\BaseMap::BICYCLING;
+CyrildeWit\MapsUrls\Enums\BaseMap::None;
+CyrildeWit\MapsUrls\Enums\BaseMap::Traffic;
+CyrildeWit\MapsUrls\Enums\BaseMap::Bicycling;
 ```
 
 Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
-use CyrildeWit\MapsUrls\Enums\BaseMap;
 
 $displayMapAction = (new DisplayMapAction())
-    ->setBaseMap(BaseMap::TRAFFIC);
+    ->setBaseMap(BaseMap::Traffic);
 ```
-
-The `CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap` exception will be thrown when an invalid base map is provided.
 
 ###### Layer
 
-The layer can be defined using method `setLayer(string $layer)`. The valid options are:
-
-* `none`
-* `transit`
-* `traffic`
-* `bicycling`
-
-These options can be referenced using the constants defined in `CyrildeWit\MapsUrls\Enums\Layer`.
+The layer can be defined using method `setLayer(Layer $layer)`. The cases of the `CyrildeWit\MapsUrls\Enums\Layer` enum are:
 
 ```php
-CyrildeWit\MapsUrls\Enums\Layer::NONE;
-CyrildeWit\MapsUrls\Enums\Layer::TRANSIT;
-CyrildeWit\MapsUrls\Enums\Layer::TRAFFIC;
-CyrildeWit\MapsUrls\Enums\Layer::BICYCLING;
+CyrildeWit\MapsUrls\Enums\Layer::None;
+CyrildeWit\MapsUrls\Enums\Layer::Transit;
+CyrildeWit\MapsUrls\Enums\Layer::Traffic;
+CyrildeWit\MapsUrls\Enums\Layer::Bicycling;
 ```
 
 Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
-use CyrildeWit\MapsUrls\Enums\Layer;
 
 $displayMapAction = (new DisplayMapAction())
-    ->setLayer(Layer::TRAFFIC);
+    ->setLayer(Layer::Traffic);
 ```
-
-The `CyrildeWit\MapsUrls\Exceptions\InvalidLayer` exception will be thrown when an invalid layer is provided.
 
 ###### Magic make constructor
 
@@ -383,16 +358,16 @@ To instantiate a display street view panorama action with initial query paramete
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
-use CyrildeWit\MapsUrls\Enums\BaseMap;
-use CyrildeWit\MapsUrls\Enums\Layer;
 
 $displayMapAction = DirectionsAction::make([
      'center' => [-33.8569, 151.2152],
      'zoom' => 10,
-     'basemap' => BaseMap::BICYCLING,
-     'layer' => Layer::TRANSIT,
+     'basemap' => BaseMap::Bicycling,
+     'layer' => Layer::Transit,
 ]);
 ```
+
+`basemap` and `layer` also accept a plain string, which `make()` resolves to an enum case without regard to casing. A string that matches no case throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
 
 #### Display a Street View panorama
 
