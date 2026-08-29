@@ -54,7 +54,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
 
     public function getViewpoint(): ?string
     {
-        if (empty($this->viewpointLatitude) || empty($this->viewpointLongitude)) {
+        if ($this->viewpointLatitude === null || $this->viewpointLongitude === null) {
             return null;
         }
 

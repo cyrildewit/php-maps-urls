@@ -54,7 +54,7 @@ class DisplayMapAction extends AbstractAction
 
     public function getCenter(): ?string
     {
-        if (empty($this->centerLatitude) || empty($this->centerLongitude)) {
+        if ($this->centerLatitude === null || $this->centerLongitude === null) {
             return null;
         }
 
