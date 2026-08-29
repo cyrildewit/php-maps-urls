@@ -192,8 +192,11 @@ The travel mode can be defined using method `setTravelMode(TravelMode $travelMod
 CyrildeWit\MapsUrls\Enums\TravelMode::Driving;
 CyrildeWit\MapsUrls\Enums\TravelMode::Walking;
 CyrildeWit\MapsUrls\Enums\TravelMode::Bicycling;
+CyrildeWit\MapsUrls\Enums\TravelMode::TwoWheeler;
 CyrildeWit\MapsUrls\Enums\TravelMode::Transit;
 ```
+
+`Bicycling` is human-powered. `TwoWheeler` covers motorised two-wheelers such as motorcycles, and Google only routes it in [countries where two-wheeler directions are supported](https://developers.google.com/maps/documentation/directions/get-directions#TwoWheeledVehicles). Elsewhere the link still opens, but the mode is ignored.
 
 Example:
 
