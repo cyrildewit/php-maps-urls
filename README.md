@@ -40,6 +40,7 @@ This package provides a convenient way to generate URLs for the Google Maps URLs
 2. [Usage](#usage)
    * [Generating a URL](#generating-a-url)
    * [Campaign tracking](#campaign-tracking)
+   * [Coordinates](#coordinates)
    * [Actions](#actions)
       * [Search](#search)
       * [Directions](#directions)
@@ -106,6 +107,22 @@ Both are optional and independent. A parameter you never set stays out of the qu
 
 The tracking parameters survive a call to `setAction()`, so one generator can serve several actions under the same campaign.
 
+### Coordinates
+
+Six parameters take a latitude/longitude pair. Four of them accept a place name instead: `query`, `origin`, `destination` and `waypoints`. The other two, `center` and `viewpoint`, are always a pair. Every one of them accepts a `CyrildeWit\MapsUrls\ValueObjects\Coordinates` instance.
+
+```php
+use CyrildeWit\MapsUrls\Actions\SearchAction;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
+
+$searchAction = (new SearchAction())
+    ->setQuery(new Coordinates(47.5951518, -122.3316393));
+```
+
+`Coordinates` writes the pair with at most seven decimals, the precision Google uses in its own examples, which resolves to about a centimetre. It drops trailing zeros, so `new Coordinates(41, 2)` becomes `41,2`, and it rounds away anything below the seventh decimal.
+
+Format the pair through this class rather than interpolating the floats yourself. Casting a float to a string honours the `precision` ini setting, so a host running `precision=6` writes `47.5951518` as `47.5952`, a ten metre error in a URL that still looks right. The cast also switches to exponential notation below `1e-4`, and Google does not read `1.0E-7` as a latitude.
+
 ### Actions
 
 The Google Maps URLs API allows you to generate a URL that performs a certain actions. These actions can be configured by using one of the provided action classes.
@@ -116,7 +133,7 @@ From the official documentation: "Launch a Google Map that displays a pin for a 
 
 ###### Query
 
-To set the query of the search action, you can call the `setQuery(string $query)` method.
+To set the query of the search action, you can call the `setQuery(string|Coordinates $query)` method.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\SearchAction;
@@ -125,13 +142,14 @@ $searchAction = (new SearchAction())
     ->setQuery('Eindhoven, Nederland');
 ```
 
-The query parameter may also consist of latitude/longitude coordinates. You can add them together yourself or make use of the `setCoordinates(float $latitude, float $longitude)` method.
+The query parameter may also consist of latitude/longitude coordinates. Pass a [`Coordinates`](#coordinates) instance for those.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\SearchAction;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 $searchAction = (new SearchAction())
-    ->setQueryCoordinates(47.5951518, -122.3316393);
+    ->setQuery(new Coordinates(47.5951518, -122.3316393));
 ```
 
 ###### Query Place ID
@@ -164,7 +182,7 @@ From the official documentation: "Request directions and launch Google Maps with
 
 ###### Origin
 
-The origin can be defined using method `setOrigin(string $origin)`.
+The origin can be defined using method `setOrigin(string|Coordinates $origin)`. It takes a place name or a [`Coordinates`](#coordinates) instance.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
@@ -187,7 +205,7 @@ $directionsAction = (new DirectionsAction())
 
 ###### Destination
 
-The destination can be defined using method `setDestination(string $destination)`.
+The destination can be defined using method `setDestination(string|Coordinates $destination)`. It takes a place name or a [`Coordinates`](#coordinates) instance.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
@@ -244,15 +262,16 @@ $directionsAction = (new DirectionsAction())
 
 ###### Waypoints
 
-The waypoints can be defined using method `setWaypoints(array $waypoints)`.
+The waypoints can be defined using method `setWaypoints(array $waypoints)`. Each entry is a place name or a [`Coordinates`](#coordinates) instance, and the two may be mixed in one list.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 $directionsAction = (new DirectionsAction())
     ->setWaypoints([
         'Berlin,Germany',
-        'Paris,France'
+        new Coordinates(48.8566, 2.3522)
     ]);
 ```
 
@@ -345,13 +364,17 @@ The `map_action` query parameter is required and is therefore added by default w
 
 ###### Center
 
-The center of the map can be defined by setting the coordinates using method `setCenter(float $latitude, float $longitude)`.
+The center of the map can be defined using method `setCenter(Coordinates|float $latitude, ?float $longitude = null)`. Pass a latitude and a longitude, or a single [`Coordinates`](#coordinates) instance. Passing a latitude on its own throws an `InvalidOption`.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 $displayMapAction = (new DisplayMapAction())
     ->setCenter(-33.8569, 151.2152);
+
+$displayMapAction = (new DisplayMapAction())
+    ->setCenter(new Coordinates(-33.8569, 151.2152));
 ```
 
 ###### Zoom
@@ -433,13 +456,17 @@ The `map_action` query parameter is required and is therefore added by default w
 
 ###### Viewpoint
 
-The viewpoint can be defined using method `setViewpoint(float $latitude, float $longitude)`.
+The viewpoint can be defined using method `setViewpoint(Coordinates|float $latitude, ?float $longitude = null)`. Pass a latitude and a longitude, or a single [`Coordinates`](#coordinates) instance. Passing a latitude on its own throws an `InvalidOption`.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setViewpoint(48.857832, 2.295226);
+
+$displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
+    ->setViewpoint(new Coordinates(48.857832, 2.295226));
 ```
 
 ###### Panorama ID
@@ -508,11 +535,20 @@ $displayStreetViewPanoramaAction = DirectionsAction::make([
 ]);
 ```
 
+## Changelog
+
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
+
+## Contributing
+
+Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
+
 ## Credits
 
-* **Cyril de Wit** - _Creator_ - [cyrildewit](https://github.com/cyrildewit)
+- **Cyril de Wit** - _Author_ - [cyrildewit](https://github.com/cyrildewit)
 
-See also the list of [contributors](https://github.com/cyrildewit/php-maps-url/graphs/contributors) who participated in this project.
+See also the list of [contributors](https://github.com/cyrildewit/eloquent-viewable/graphs/contributors) who
+participated in this project.
 
 ## License
 
