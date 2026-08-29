@@ -19,7 +19,7 @@ it('builds the query parameters', function () {
     expect($action->getParameters())->toBe([
         'map_action' => DisplayMapAction::MAP_ACTION,
         'center' => '40,40',
-        'zoom' => '20',
+        'zoom' => 20,
         'basemap' => 'traffic',
         'layer' => 'bicycling',
     ]);
@@ -62,7 +62,7 @@ it('builds the center from options', function () {
 it('builds the zoom from options', function () {
     $action = DisplayMapAction::make(['zoom' => 12]);
 
-    expect($action->getZoom())->toBe('12');
+    expect($action->getZoom())->toBe(12);
 });
 
 it('stores the base map', function () {
