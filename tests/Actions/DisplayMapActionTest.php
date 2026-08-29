@@ -15,14 +15,14 @@ it('builds the query parameters', function (): void {
     $action = (new DisplayMapAction)
         ->setCenter(40, 40)
         ->setZoom(20)
-        ->setBaseMap(BaseMap::Traffic)
+        ->setBaseMap(BaseMap::Satellite)
         ->setLayer(Layer::Bicycling);
 
     expect($action->getParameters())->toBe([
         'map_action' => DisplayMapAction::MAP_ACTION,
         'center' => '40,40',
         'zoom' => 20,
-        'basemap' => 'traffic',
+        'basemap' => 'satellite',
         'layer' => 'bicycling',
     ]);
 });
@@ -68,9 +68,9 @@ it('builds the zoom from options', function (): void {
 });
 
 it('stores the base map', function (): void {
-    $action = (new DisplayMapAction)->setBaseMap(BaseMap::Traffic);
+    $action = (new DisplayMapAction)->setBaseMap(BaseMap::Satellite);
 
-    expect($action->getBaseMap())->toBe(BaseMap::Traffic);
+    expect($action->getBaseMap())->toBe(BaseMap::Satellite);
 });
 
 it('stores the layer', function (): void {
@@ -81,21 +81,21 @@ it('stores the layer', function (): void {
 
 it('resolves enums from strings regardless of casing', function (): void {
     $action = DisplayMapAction::make([
-        'basemap' => 'TRAFFIC',
+        'basemap' => 'SATELLITE',
         'layer' => 'transit',
     ]);
 
-    expect($action->getBaseMap())->toBe(BaseMap::Traffic)
+    expect($action->getBaseMap())->toBe(BaseMap::Satellite)
         ->and($action->getLayer())->toBe(Layer::Transit);
 });
 
 it('accepts enum instances', function (): void {
     $action = DisplayMapAction::make([
-        'basemap' => BaseMap::Bicycling,
+        'basemap' => BaseMap::Terrain,
         'layer' => Layer::None,
     ]);
 
-    expect($action->getBaseMap())->toBe(BaseMap::Bicycling)
+    expect($action->getBaseMap())->toBe(BaseMap::Terrain)
         ->and($action->getLayer())->toBe(Layer::None);
 });
 
@@ -103,7 +103,7 @@ it('rejects an unsupported base map', function (): void {
     DisplayMapAction::make(['basemap' => 'unsupported']);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'basemap'. Expected one of 'none', 'traffic', 'bicycling'. Received 'unsupported'."
+    "Invalid value provided for 'basemap'. Expected one of 'roadmap', 'satellite', 'terrain'. Received 'unsupported'."
 );
 
 it('rejects an unsupported layer', function (): void {
@@ -114,7 +114,7 @@ it('rejects a base map that is neither a string nor an enum instance', function 
     DisplayMapAction::make(['basemap' => 22]);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'basemap'. Expected one of 'none', 'traffic', 'bicycling'. Received 22."
+    "Invalid value provided for 'basemap'. Expected one of 'roadmap', 'satellite', 'terrain'. Received 22."
 );
 
 it('rejects a layer that is neither a string nor an enum instance', function (): void {
