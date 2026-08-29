@@ -81,7 +81,7 @@ it('stores the travel mode', function (): void {
 });
 
 it('keeps the hyphen in the two-wheeler travel mode', function (): void {
-    $action = DirectionsAction::make(['travelmode' => 'TWO-WHEELER']);
+    $action = DirectionsAction::make(['travelmode' => 'two-wheeler']);
 
     expect($action->getTravelMode())->toBe(TravelMode::TwoWheeler)
         ->and($action->getParameters()['travelmode'])->toBe('two-wheeler');
@@ -93,15 +93,22 @@ it('stores the direction action', function (): void {
     expect($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });
 
-it('resolves enums from strings regardless of casing', function (): void {
+it('resolves enums from strings', function (): void {
     $action = DirectionsAction::make([
-        'travelmode' => 'WALKING',
+        'travelmode' => 'walking',
         'dir_action' => 'navigate',
     ]);
 
     expect($action->getTravelMode())->toBe(TravelMode::Walking)
         ->and($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });
+
+it('rejects a string whose casing does not match the backing value', function (): void {
+    DirectionsAction::make(['travelmode' => 'WALKING']);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'two-wheeler', 'transit'. Received 'WALKING'."
+);
 
 it('accepts enum instances', function (): void {
     $action = DirectionsAction::make([
