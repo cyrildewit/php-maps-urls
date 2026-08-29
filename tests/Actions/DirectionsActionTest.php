@@ -80,6 +80,13 @@ it('stores the travel mode', function (): void {
     expect($action->getTravelMode())->toBe(TravelMode::Driving);
 });
 
+it('keeps the hyphen in the two-wheeler travel mode', function (): void {
+    $action = DirectionsAction::make(['travelmode' => 'TWO-WHEELER']);
+
+    expect($action->getTravelMode())->toBe(TravelMode::TwoWheeler)
+        ->and($action->getParameters()['travelmode'])->toBe('two-wheeler');
+});
+
 it('stores the direction action', function (): void {
     $action = (new DirectionsAction)->setDirectionAction(DirectionAction::Navigate);
 
@@ -110,7 +117,7 @@ it('rejects an unsupported travel mode', function (): void {
     DirectionsAction::make(['travelmode' => 'unsupported']);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 'unsupported'."
+    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'two-wheeler', 'transit'. Received 'unsupported'."
 );
 
 it('rejects an unsupported direction action', function (): void {
@@ -121,12 +128,12 @@ it('rejects a travel mode that is neither a string nor an enum instance', functi
     DirectionsAction::make(['travelmode' => 22]);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 22."
+    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'two-wheeler', 'transit'. Received 22."
 );
 
 it('rejects an instance of the wrong enum', function (): void {
     DirectionsAction::make(['travelmode' => DirectionAction::Navigate]);
 })->throws(
     InvalidOption::class,
-    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received ".DirectionAction::class.'.'
+    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'two-wheeler', 'transit'. Received ".DirectionAction::class.'.'
 );
