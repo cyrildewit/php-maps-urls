@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use Override;
 
 class DisplayStreetViewPanoramaAction extends AbstractAction
 {
@@ -13,7 +14,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
     const string MAP_ACTION = 'pano';
 
     /** @var array<string, string> */
-    #[\Override]
+    #[Override]
     protected array $queryParametersSetters = [
         'viewpoint' => 'setViewpoint',
         'pano' => 'setPanoramaId',

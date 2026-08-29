@@ -4,9 +4,11 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
+use BackedEnum;
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use Override;
 
 class DisplayMapAction extends AbstractAction
 {
@@ -15,7 +17,7 @@ class DisplayMapAction extends AbstractAction
     const string MAP_ACTION = 'map';
 
     /** @var array<string, string> */
-    #[\Override]
+    #[Override]
     protected array $queryParametersSetters = [
         'center' => 'setCenter',
         'zoom' => 'setZoom',
@@ -23,8 +25,8 @@ class DisplayMapAction extends AbstractAction
         'layer' => 'setLayer',
     ];
 
-    /** @var array<string, class-string<\BackedEnum>> */
-    #[\Override]
+    /** @var array<string, class-string<BackedEnum>> */
+    #[Override]
     protected array $queryParametersEnums = [
         'basemap' => BaseMap::class,
         'layer' => Layer::class,
