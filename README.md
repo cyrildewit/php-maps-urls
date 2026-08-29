@@ -399,8 +399,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
 
 ###### Heading
 
-The heading can be defined using method `setHeading(int $degrees)`. Only values from 180 to 360 degrees are expected.
-
+The heading can be defined using method `setHeading(int $degrees)`. Only values from -180 to 360 degrees are expected.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
@@ -426,7 +425,7 @@ The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when
 
 ###### Fov
 
-The pitch can be defined using method `setFov(int $degrees)`. Only values from -10 to 100 degrees are expected.
+The fov can be defined using method `setFov(int $degrees)`. Only values from 10 to 100 degrees are expected.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
