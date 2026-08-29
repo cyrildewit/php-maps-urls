@@ -34,10 +34,10 @@ abstract class AbstractAction
             $setter = $setters[$queryParameter]
                 ?? throw InvalidOption::unknownOption($queryParameter, array_keys($setters));
 
-            if (is_string($value) && isset($enums[$queryParameter])) {
-                $enum = $enums[$queryParameter];
+            $enum = $enums[$queryParameter] ?? null;
 
-                $value = $enum::tryFrom(strtolower($value))
+            if ($enum !== null && ! $value instanceof $enum) {
+                $value = (is_string($value) ? $enum::tryFrom(strtolower($value)) : null)
                     ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
             }
 

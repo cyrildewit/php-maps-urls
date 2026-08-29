@@ -109,3 +109,17 @@ it('rejects an unsupported base map', function (): void {
 it('rejects an unsupported layer', function (): void {
     DisplayMapAction::make(['layer' => 'unsupported']);
 })->throws(InvalidOption::class);
+
+it('rejects a base map that is neither a string nor an enum instance', function (): void {
+    DisplayMapAction::make(['basemap' => 22]);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'basemap'. Expected one of 'none', 'traffic', 'bicycling'. Received 22."
+);
+
+it('rejects a layer that is neither a string nor an enum instance', function (): void {
+    DisplayMapAction::make(['layer' => ['transit']]);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'layer'. Expected one of 'none', 'transit', 'traffic', 'bicycling'. Received array."
+);

@@ -11,11 +11,12 @@ class InvalidOption extends Exception
     /**
      * @param  class-string<\BackedEnum>  $enum
      */
-    public static function unsupportedValue(string $queryParameter, string $enum, string $value): self
+    public static function unsupportedValue(string $queryParameter, string $enum, mixed $value): self
     {
         $expected = implode("', '", array_column($enum::cases(), 'value'));
+        $received = is_scalar($value) ? var_export($value, true) : get_debug_type($value);
 
-        return new self("Invalid value provided for '{$queryParameter}'. Expected one of '{$expected}'. Received '{$value}'.");
+        return new self("Invalid value provided for '{$queryParameter}'. Expected one of '{$expected}'. Received {$received}.");
     }
 
     /**
