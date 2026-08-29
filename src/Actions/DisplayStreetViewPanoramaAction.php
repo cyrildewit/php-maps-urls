@@ -10,9 +10,9 @@ use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
 
 class DisplayStreetViewPanoramaAction extends AbstractAction
 {
-    const ENDPOINT = '@';
+    const string ENDPOINT = '@';
 
-    const MAP_ACTION = 'pano';
+    const string MAP_ACTION = 'pano';
 
     /** @var array<string, string> */
     #[\Override]
