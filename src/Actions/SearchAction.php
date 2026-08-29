@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
+use Override;
+
 class SearchAction extends AbstractAction
 {
     const string ENDPOINT = 'search/';
 
     /** @var array<string, string> */
-    #[\Override]
+    #[Override]
     protected array $queryParametersSetters = [
         'query' => 'setQuery',
         'query_coordinates' => 'setQueryCoordinates',

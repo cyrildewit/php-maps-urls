@@ -4,15 +4,17 @@ declare(strict_types=1);
 
 namespace CyrildeWit\MapsUrls\Actions;
 
+use BackedEnum;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
+use Override;
 
 class DirectionsAction extends AbstractAction
 {
     const string ENDPOINT = 'dir';
 
     /** @var array<string, string> */
-    #[\Override]
+    #[Override]
     protected array $queryParametersSetters = [
         'origin' => 'setOrigin',
         'origin_place_id' => 'setOriginPlaceId',
@@ -24,8 +26,8 @@ class DirectionsAction extends AbstractAction
         'waypoint_place_ids' => 'setWaypointPlaceIds',
     ];
 
-    /** @var array<string, class-string<\BackedEnum>> */
-    #[\Override]
+    /** @var array<string, class-string<BackedEnum>> */
+    #[Override]
     protected array $queryParametersEnums = [
         'travelmode' => TravelMode::class,
         'dir_action' => DirectionAction::class,

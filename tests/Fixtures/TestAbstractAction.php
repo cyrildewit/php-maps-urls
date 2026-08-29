@@ -5,10 +5,11 @@ declare(strict_types=1);
 namespace CyrildeWit\MapsUrls\Tests\Fixtures;
 
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
+use Override;
 
 class TestAbstractAction extends AbstractAction
 {
-    #[\Override]
+    #[Override]
     protected array $queryParametersSetters = [
         'string' => 'setStringProp',
         'int' => 'setIntProp',
