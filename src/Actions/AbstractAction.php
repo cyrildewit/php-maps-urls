@@ -84,9 +84,6 @@ abstract class AbstractAction
     }
 
     /**
-     * The bounds are written once, here at the call site, and passed on to the
-     * message, so the two cannot drift apart.
-     *
      * @throws InvalidOption
      */
     protected function guardRange(string $queryParameter, int $value, int $min, int $max): int
