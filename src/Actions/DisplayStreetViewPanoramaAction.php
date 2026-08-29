@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 use Override;
 
 class DisplayStreetViewPanoramaAction extends AbstractAction
@@ -66,7 +67,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
             return null;
         }
 
-        return "{$this->viewpointLatitude},{$this->viewpointLongitude}";
+        return (string) new Coordinates($this->viewpointLatitude, $this->viewpointLongitude);
     }
 
     public function getPanoramaId(): ?string
@@ -89,10 +90,15 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
         return $this->fov;
     }
 
-    public function setViewpoint(float $latitude, float $longitude): self
+    /**
+     * @throws InvalidOption
+     */
+    public function setViewpoint(Coordinates|float $latitude, ?float $longitude = null): self
     {
-        $this->setViewpointLatitude($latitude);
-        $this->setViewpointLongitude($longitude);
+        $viewpoint = $this->toCoordinates('viewpoint', $latitude, $longitude);
+
+        $this->setViewpointLatitude($viewpoint->latitude);
+        $this->setViewpointLongitude($viewpoint->longitude);
 
         return $this;
     }
