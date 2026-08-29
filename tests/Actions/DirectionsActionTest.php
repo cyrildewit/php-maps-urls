@@ -7,6 +7,7 @@ use CyrildeWit\MapsUrls\Enums\Avoid;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 
 it('exposes the directions endpoint', function (): void {
     expect((new DirectionsAction)->getEndpoint())->toBe(DirectionsAction::ENDPOINT);
@@ -82,6 +83,35 @@ it('builds the plain options from strings and arrays', function (): void {
         ->and($action->getDestinationPlaceId())->toBe('zyxwvutsrqponmlkjihgfedcba')
         ->and($action->getWaypoints())->toBe(['Rotterdam', 'Utrecht'])
         ->and($action->getWaypointPlaceIds())->toBe(['abc', 'def']);
+});
+
+it('accepts coordinates for the origin and the destination', function (): void {
+    $action = (new DirectionsAction)
+        ->setOrigin(new Coordinates(52.3676, 4.9041))
+        ->setDestination(new Coordinates(52.4584, 5.0186));
+
+    expect($action->getOrigin())->toBe('52.3676,4.9041')
+        ->and($action->getDestination())->toBe('52.4584,5.0186');
+});
+
+it('accepts a waypoint list that mixes strings and coordinates', function (): void {
+    $action = (new DirectionsAction)
+        ->setWaypoints(['Rotterdam', new Coordinates(52.0907, 5.1214)]);
+
+    expect($action->getWaypoints())->toBe(['Rotterdam', '52.0907,5.1214'])
+        ->and($action->getParameters()['waypoints'])->toBe('Rotterdam|52.0907,5.1214');
+});
+
+it('builds coordinate options', function (): void {
+    $action = DirectionsAction::make([
+        'origin' => new Coordinates(52.3676, 4.9041),
+        'destination' => new Coordinates(52.4584, 5.0186),
+        'waypoints' => [new Coordinates(52.0907, 5.1214)],
+    ]);
+
+    expect($action->getOrigin())->toBe('52.3676,4.9041')
+        ->and($action->getDestination())->toBe('52.4584,5.0186')
+        ->and($action->getWaypoints())->toBe(['52.0907,5.1214']);
 });
 
 it('stores the travel mode', function (): void {

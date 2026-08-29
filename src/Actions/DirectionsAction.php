@@ -8,6 +8,7 @@ use BackedEnum;
 use CyrildeWit\MapsUrls\Enums\Avoid;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
+use CyrildeWit\MapsUrls\ValueObjects\Coordinates;
 use Override;
 
 class DirectionsAction extends AbstractAction
@@ -153,9 +154,9 @@ class DirectionsAction extends AbstractAction
         return ! empty($this->avoid);
     }
 
-    public function setOrigin(string $origin): self
+    public function setOrigin(string|Coordinates $origin): self
     {
-        $this->origin = $origin;
+        $this->origin = (string) $origin;
 
         return $this;
     }
@@ -167,9 +168,9 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
-    public function setDestination(string $destination): self
+    public function setDestination(string|Coordinates $destination): self
     {
-        $this->destination = $destination;
+        $this->destination = (string) $destination;
 
         return $this;
     }
@@ -196,11 +197,14 @@ class DirectionsAction extends AbstractAction
     }
 
     /**
-     * @param  list<string>  $waypoints
+     * @param  list<string|Coordinates>  $waypoints
      */
     public function setWaypoints(array $waypoints): self
     {
-        $this->waypoints = $waypoints;
+        $this->waypoints = array_map(
+            static fn (string|Coordinates $waypoint): string => (string) $waypoint,
+            $waypoints,
+        );
 
         return $this;
     }
