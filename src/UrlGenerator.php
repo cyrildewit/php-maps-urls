@@ -34,6 +34,9 @@ class UrlGenerator
         return $this;
     }
 
+    /**
+     * @return array<string, string|int|null>
+     */
     protected function collectParameters(): array
     {
         $actionParameters = $this->action->getParameters();
@@ -41,6 +44,9 @@ class UrlGenerator
         return array_merge($this->getDefaultParameters(), $actionParameters);
     }
 
+    /**
+     * @return array<string, string>
+     */
     protected function getDefaultParameters(): array
     {
         return [
@@ -48,6 +54,9 @@ class UrlGenerator
         ];
     }
 
+    /**
+     * @param  array<string, string|int|null>  $parameters
+     */
     protected function formatQueryString(array $parameters): string
     {
         return http_build_query($parameters);

@@ -14,6 +14,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
 
     const MAP_ACTION = 'pano';
 
+    /** @var array<string, string> */
     protected array $queryParametersSetters = [
         'viewpoint' => 'setViewpoint',
         'pano' => 'setPanoramaId',
@@ -34,6 +35,9 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
 
     protected ?int $fov = null;
 
+    /**
+     * @return array<string, string|int|null>
+     */
     public function getParameters(): array
     {
         return [
