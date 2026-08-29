@@ -1,16 +1,18 @@
 <?php
 
+declare(strict_types=1);
+
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
 it('exposes the display map endpoint', function () {
-    expect((new DisplayMapAction())->getEndpoint())->toBe(DisplayMapAction::ENDPOINT);
+    expect((new DisplayMapAction)->getEndpoint())->toBe(DisplayMapAction::ENDPOINT);
 });
 
 it('builds the query parameters', function () {
-    $action = (new DisplayMapAction())
+    $action = (new DisplayMapAction)
         ->setCenter(40, 40)
         ->setZoom(20)
         ->setBaseMap(BaseMap::Traffic)
@@ -26,25 +28,25 @@ it('builds the query parameters', function () {
 });
 
 it('formats the center as a comma separated pair', function () {
-    $action = (new DisplayMapAction())->setCenter(20, 40);
+    $action = (new DisplayMapAction)->setCenter(20, 40);
 
     expect($action->getCenter())->toBe('20,40');
 });
 
 it('has no center until both coordinates are set', function () {
-    $action = (new DisplayMapAction())->setCenterLatitude(40);
+    $action = (new DisplayMapAction)->setCenterLatitude(40);
 
     expect($action->getCenter())->toBeNull();
 });
 
 it('keeps a center on the equator or the prime meridian', function () {
-    $action = (new DisplayMapAction())->setCenter(0, 0);
+    $action = (new DisplayMapAction)->setCenter(0, 0);
 
     expect($action->getCenter())->toBe('0,0');
 });
 
 it('builds null parameters when nothing is set', function () {
-    expect((new DisplayMapAction())->getParameters())->toBe([
+    expect((new DisplayMapAction)->getParameters())->toBe([
         'map_action' => DisplayMapAction::MAP_ACTION,
         'center' => null,
         'zoom' => null,
@@ -66,13 +68,13 @@ it('builds the zoom from options', function () {
 });
 
 it('stores the base map', function () {
-    $action = (new DisplayMapAction())->setBaseMap(BaseMap::Traffic);
+    $action = (new DisplayMapAction)->setBaseMap(BaseMap::Traffic);
 
     expect($action->getBaseMap())->toBe(BaseMap::Traffic);
 });
 
 it('stores the layer', function () {
-    $action = (new DisplayMapAction())->setLayer(Layer::Transit);
+    $action = (new DisplayMapAction)->setLayer(Layer::Transit);
 
     expect($action->getLayer())->toBe(Layer::Transit);
 });

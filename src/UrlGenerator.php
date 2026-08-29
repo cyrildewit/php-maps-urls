@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CyrildeWit\MapsUrls;
 
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
@@ -7,6 +9,7 @@ use CyrildeWit\MapsUrls\Actions\AbstractAction;
 class UrlGenerator
 {
     const BASE_URL = 'https://www.google.com/maps/';
+
     const API_VERSION = '1';
 
     protected AbstractAction $action;

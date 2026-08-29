@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
 use CyrildeWit\MapsUrls\UrlGenerator;
 
@@ -10,8 +12,7 @@ function fakeAction(string $endpoint, array $parameters = []): AbstractAction
         public function __construct(
             private string $endpoint,
             private array $parameters,
-        ) {
-        }
+        ) {}
 
         public function getEndpoint(): string
         {

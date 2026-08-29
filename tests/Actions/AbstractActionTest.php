@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 use CyrildeWit\MapsUrls\Tests\Fixtures\TestAbstractAction;
 
 it('passes each option to its mapped setter', function () {

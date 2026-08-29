@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;

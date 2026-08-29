@@ -1,3 +1,6 @@
 <?php
 
-uses(PHPUnit\Framework\TestCase::class)->in(__DIR__);
+declare(strict_types=1);
+use PHPUnit\Framework\TestCase;
+
+uses(TestCase::class)->in(__DIR__);

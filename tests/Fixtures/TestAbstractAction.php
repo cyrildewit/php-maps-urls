@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace CyrildeWit\MapsUrls\Tests\Fixtures;
 
 use CyrildeWit\MapsUrls\Actions\AbstractAction;
