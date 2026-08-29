@@ -6,47 +6,71 @@
 [![License](https://img.shields.io/packagist/l/cyrildewit/php-maps-urls)](https://packagist.org/packages/cyrildewit/php-maps-urls)
 [![Coverage](https://img.shields.io/codecov/c/github/cyrildewit/php-maps-urls.svg)](https://codecov.io/gh/cyrildewit/php-maps-urls)
 
-This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide).
+## Introduction
 
-Here's a quick example:
+This package allows you to build URLs for the [Google Maps URLs API](https://developers.google.com/maps/documentation/urls/guide). Every action the API supports has its own class. You configure an action, hand it to the URL generator and get a string back.
+
+The package only builds the URL string. It sends no HTTP request, and Google does not require an API key for Maps URLs. Opening the result launches the Google Maps app on Android and iOS when the app is installed, and a browser everywhere else.
+
+### Quick example
 
 ```php
 use CyrildeWit\MapsUrls\UrlGenerator;
-use CyrildeWit\MapsUrls\Actions\SearchAction;
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
+use CyrildeWit\MapsUrls\Actions\SearchAction;
+use CyrildeWit\MapsUrls\Enums\TravelMode;
 
 $searchAction = (new SearchAction())
-    ->setQuery('The Netherlands Amsterdam');
+    ->setQuery('Rijksmuseum');
 $searchUrl = (new UrlGenerator($searchAction))->generate();
+// https://www.google.com/maps/search/?api=1&query=Rijksmuseum
 
 $directionsAction = (new DirectionsAction())
-    ->setOrigin('The Netherlands Amsterdam')
-    ->setDestination('The Netherlands Utrecht');
+    ->setOrigin('Amsterdam')
+    ->setDestination('Utrecht')
+    ->setTravelMode(TravelMode::Bicycling);
 $directionsUrl = (new UrlGenerator($directionsAction))->generate();
+// https://www.google.com/maps/dir/?api=1&origin=Amsterdam&destination=Utrecht&travelmode=bicycling
+
+$panoramaAction = (new DisplayStreetViewPanoramaAction())
+    ->setViewpoint(48.857832, 2.295226);
+$panoramaUrl = (new UrlGenerator($panoramaAction))->generate();
+// https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=48.857832%2C2.295226
 ```
 
-## Overview
+### Key features
 
-This package provides a convenient way to generate URLs for the Google Maps URLs API. Each action has its own abstraction that can be used to generate a URL. For more information about this API, head over to the [Google Maps URLs API documentation](https://developers.google.com/maps/documentation/urls/guide).
+* A class per action: search, directions, displaying a map and Street View panoramas.
+* Backed enums for every fixed-value parameter, so a typo fails at the call site instead of producing a URL that Google quietly ignores.
+* A `Coordinates` value object that writes a latitude and longitude the same way on every host, whatever the `precision` ini setting is.
+* Campaign tracking on the generator, shared across every action you generate with it.
+* No runtime dependencies beyond PHP itself.
+* Line coverage and type coverage held at 100% in CI.
 
-## Documentation
+<details>
+<summary><strong>Table of contents</strong></summary>
 
-### Table of contents
-
-1. [Getting Started](#getting-started)
-    * [Requirements](#requirements)
+1. [Introduction](#introduction)
+    * [Quick example](#quick-example)
+    * [Key features](#key-features)
+2. [Getting Started](#getting-started)
+    * [Version Compatibility](#version-compatibility)
     * [Installation](#installation)
-2. [Usage](#usage)
+3. [Usage](#usage)
    * [Generating a URL](#generating-a-url)
    * [Campaign tracking](#campaign-tracking)
    * [Coordinates](#coordinates)
    * [Actions](#actions)
+      * [Creating an action from an array](#creating-an-action-from-an-array)
       * [Search](#search)
       * [Directions](#directions)
       * [Displaying a map](#displaying-a-map)
-      * [Display a Street View panorama](#display-a-street-view-panorama)     
-3. [Credits](#credits)
-4. [License](#license)
+      * [Display a Street View panorama](#display-a-street-view-panorama)
+4. [Credits](#credits)
+5. [License](#license)
+
+</details>
 
 ## Getting Started
 
@@ -70,7 +94,7 @@ composer require cyrildewit/php-maps-urls
 
 ### Generating a URL
 
-The `CyrildeWit\MapsUrls\UrlGenerator` class is responsible for generation the URLs. The constructor accepts an instance of an action class. Action classes extends `CyrildeWit\MapsUrls\Actions\AbstractAction`.
+The `CyrildeWit\MapsUrls\UrlGenerator` class generates the URLs. The constructor accepts an instance of an action class. Action classes extend `CyrildeWit\MapsUrls\Actions\AbstractAction`.
 
 ```php
 use CyrildeWit\MapsUrls\UrlGenerator;
@@ -81,7 +105,29 @@ $searchAction = (new SearchAction())
 $searchUrl = (new UrlGenerator($searchAction))->generate();
 ```
 
-Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven,%20Nederland`
+Output `$searchUrl`: `https://www.google.com/maps/search/?api=1&query=Eindhoven%2C+Nederland`
+
+The query string is built with `http_build_query()`, so a space becomes `+` and a comma becomes `%2C`. Google reads both.
+
+One generator can build several URLs. `setAction(AbstractAction $action)` swaps the action and leaves the rest of the generator alone.
+
+```php
+use CyrildeWit\MapsUrls\UrlGenerator;
+use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Actions\SearchAction;
+
+$generator = new UrlGenerator((new SearchAction())->setQuery('Eindhoven'));
+$searchUrl = $generator->generate();
+
+$directionsAction = (new DirectionsAction())
+    ->setOrigin('Eindhoven')
+    ->setDestination('Utrecht');
+$directionsUrl = $generator->setAction($directionsAction)->generate();
+```
+
+Output `$directionsUrl`: `https://www.google.com/maps/dir/?api=1&origin=Eindhoven&destination=Utrecht`
+
+Every setter on a generator or an action has a matching getter, such as `getQuery()` or `getUtmSource()`. You rarely need them when you only want a URL, but they are there for inspecting or testing an action before you generate.
 
 ### Campaign tracking
 
@@ -122,15 +168,38 @@ $searchAction = (new SearchAction())
 
 Format the pair through this class rather than interpolating the floats yourself. Casting a float to a string honours the `precision` ini setting, so a host running `precision=6` writes `47.5951518` as `47.5952`, a ten metre error in a URL that still looks right. The cast also switches to exponential notation below `1e-4`, and Google does not read `1.0E-7` as a latitude.
 
+`Coordinates` formats the pair, it does not check it. `new Coordinates(999, -500)` is accepted and lands in the URL as `999,-500`. Validate the latitude and longitude yourself if they come from user input.
+
 ### Actions
 
-The Google Maps URLs API allows you to generate a URL that performs a certain actions. These actions can be configured by using one of the provided action classes.
+The Google Maps URLs API allows you to generate a URL that performs a certain action. These actions can be configured by using one of the provided action classes.
+
+#### Creating an action from an array
+
+Every action class has a static `make(array $options)` method. The keys are the query parameter names from the Google Maps URLs API, not the setter names.
+
+```php
+use CyrildeWit\MapsUrls\Actions\SearchAction;
+
+$searchAction = SearchAction::make([
+    'query' => 'Eindhoven, Nederland',
+]);
+```
+
+The same rules apply to every action:
+
+* An unknown key throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`, and the message lists the keys that action does accept.
+* A parameter backed by an enum takes an enum case or the plain string behind it. `make()` resolves the string to the case backed by exactly that value, so `'driving'` works and `'Driving'` throws.
+* A parameter that takes a list, such as `avoid`, also accepts a single value on its own.
+* `center` and `viewpoint` take the latitude and the longitude as a two element array, or a single [`Coordinates`](#coordinates) instance.
+
+Each action lists its own keys below.
 
 #### Search
 
 From the official documentation: "Launch a Google Map that displays a pin for a specific place, or perform a general search and launch a map to display the results."
 
-###### Query
+##### Query
 
 To set the query of the search action, you can call the `setQuery(string|Coordinates $query)` method.
 
@@ -151,7 +220,7 @@ $searchAction = (new SearchAction())
     ->setQuery(new Coordinates(47.5951518, -122.3316393));
 ```
 
-###### Query Place ID
+##### Query Place ID
 
 If you want to specify the optional place ID for a search action, you can add it using the `setQueryPlaceId(string $placeId)` method.
 
@@ -162,9 +231,9 @@ $searchAction = (new SearchAction())
     ->setQueryPlaceId('ChIJn8N5VRvZxkcRmLlkgWTSmvM');
 ```
 
-###### Magic make constructor
+##### Creating from an array
 
-To instantiate a search action with initial query parameters values, you can make use of the magic `SearchAction::make(array $options)` method.
+See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\SearchAction;
@@ -179,7 +248,7 @@ $searchAction = SearchAction::make([
 
 From the official documentation: "Request directions and launch Google Maps with the results."
 
-###### Origin
+##### Origin
 
 The origin can be defined using method `setOrigin(string|Coordinates $origin)`. It takes a place name or a [`Coordinates`](#coordinates) instance.
 
@@ -190,7 +259,7 @@ $directionsAction = (new DirectionsAction())
     ->setOrigin('Eindhoven, Nederland');
 ```
 
-###### Origin Place ID
+##### Origin Place ID
 
 The origin place ID can be defined using method `setOriginPlaceId(string $placeId)`.
 
@@ -202,7 +271,7 @@ $directionsAction = (new DirectionsAction())
     ->setOriginPlaceId('ChIJn8N5VRvZxkcRmLlkgWTSmvM');
 ```
 
-###### Destination
+##### Destination
 
 The destination can be defined using method `setDestination(string|Coordinates $destination)`. It takes a place name or a [`Coordinates`](#coordinates) instance.
 
@@ -213,7 +282,7 @@ $directionsAction = (new DirectionsAction())
     ->setDestination('Monnickendam, Nederland');
 ```
 
-###### Destination Place ID
+##### Destination Place ID
 
 The destination place ID can be defined using method `setDestinationPlaceId(string $placeId)`.
 
@@ -225,7 +294,7 @@ $directionsAction = (new DirectionsAction())
     ->setDestinationPlaceId('ChIJTZfQeLgFxkcRQhAYGf9HbrU');
 ```
 
-###### Travel Mode
+##### Travel Mode
 
 The travel mode can be defined using method `setTravelMode(TravelMode $travelMode)`. The cases of the `CyrildeWit\MapsUrls\Enums\TravelMode` enum are:
 
@@ -243,23 +312,25 @@ Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\TravelMode;
 
 $directionsAction = (new DirectionsAction())
     ->setTravelMode(TravelMode::Bicycling);
 ```
 
-###### Direction Action
+##### Direction Action
 
 The direction action can be defined using method `setDirectionAction(DirectionAction $directionAction)`. The `CyrildeWit\MapsUrls\Enums\DirectionAction` enum has one case, `Navigate`.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\DirectionAction;
 
 $directionsAction = (new DirectionsAction())
     ->setDirectionAction(DirectionAction::Navigate);
 ```
 
-###### Waypoints
+##### Waypoints
 
 The waypoints can be defined using method `setWaypoints(array $waypoints)`. Each entry is a place name or a [`Coordinates`](#coordinates) instance, and the two may be mixed in one list.
 
@@ -274,7 +345,7 @@ $directionsAction = (new DirectionsAction())
     ]);
 ```
 
-###### Waypoint place IDs
+##### Waypoint place IDs
 
 Waypoint place IDs can be defined using method `setWaypointPlaceIds(array $placeIds)`.
 
@@ -292,7 +363,9 @@ $directionsAction = (new DirectionsAction())
     ]);
 ```
 
-###### Avoid
+Google matches the two lists by position, so the first place ID belongs to the first waypoint. The package passes both lists through as you give them. It does not check that they are the same length, and a shorter list of place IDs shifts every following waypoint onto the wrong ID.
+
+##### Avoid
 
 The route features to avoid can be defined using method `setAvoid(Avoid ...$avoid)`. The cases of the `CyrildeWit\MapsUrls\Enums\Avoid` enum are:
 
@@ -312,12 +385,15 @@ $directionsAction = (new DirectionsAction())
     ->setAvoid(Avoid::Tolls, Avoid::Ferries);
 ```
 
-###### Magic make constructor
+##### Creating from an array
 
-To instantiate a directions action with initial query parameters values, you can make use of the magic `DirectionsAction::make(array $options)` method.
+See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\Avoid;
+use CyrildeWit\MapsUrls\Enums\DirectionAction;
+use CyrildeWit\MapsUrls\Enums\TravelMode;
 
 $directionsAction = DirectionsAction::make([
     'origin' => 'Eindhoven, Nederland',
@@ -341,27 +417,25 @@ $directionsAction = DirectionsAction::make([
 ]);
 ```
 
-`travelmode`, `dir_action` and `avoid` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+`travelmode`, `dir_action` and `avoid` take the plain string behind the enum case too. Because `avoid` is a list, `'avoid' => 'tolls'` and `'avoid' => ['tolls']` build the same action.
 
 ```php
 $directionsAction = DirectionsAction::make([
     'travelmode' => 'driving',
     'dir_action' => 'navigate',
-    'avoid' => ['tolls', 'ferries'],
+    'avoid' => 'tolls',
 ]);
 ```
-
-Because `avoid` takes a list, `make()` accepts one value on its own as well. `'avoid' => 'tolls'` and `'avoid' => ['tolls']` build the same action.
 
 #### Displaying a map
 
 From the official documentation: "Launch Google Maps with no markers or directions."
 
-###### Map action
+##### Map action
 
-The `map_action` query parameter is required and is therefore added by default with value `map`.
+Google requires the `map_action` parameter. This action always writes `map_action=map`, and there is no setter for it.
 
-###### Center
+##### Center
 
 The center of the map can be defined using method `setCenter(Coordinates|float $latitude, ?float $longitude = null)`. Pass a latitude and a longitude, or a single [`Coordinates`](#coordinates) instance. Passing a latitude on its own throws an `InvalidOption`.
 
@@ -376,7 +450,9 @@ $displayMapAction = (new DisplayMapAction())
     ->setCenter(new Coordinates(-33.8569, 151.2152));
 ```
 
-###### Zoom
+`setCenterLatitude(float $latitude)` and `setCenterLongitude(float $longitude)` set one half of the pair. The `center` parameter is only written once both are set, so an action that has a latitude and no longitude generates a URL without a center rather than a half filled one.
+
+##### Zoom
 
 The zoom level of the map can be defined by using method `setZoom(int $zoom)`. Only whole numbers from 0 (the whole world) to 21 (individual buildings) are expected. Google notes that the upper limit varies with the map data available at the location, so a zoom of 21 is not guaranteed everywhere.
 
@@ -389,7 +465,7 @@ $displayMapAction = (new DisplayMapAction())
     ->setZoom(10);
 ```
 
-###### Base Map
+##### Base Map
 
 The base map can be defined using method `setBaseMap(BaseMap $baseMap)`. The cases of the `CyrildeWit\MapsUrls\Enums\BaseMap` enum are:
 
@@ -403,12 +479,13 @@ Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
+use CyrildeWit\MapsUrls\Enums\BaseMap;
 
 $displayMapAction = (new DisplayMapAction())
     ->setBaseMap(BaseMap::Satellite);
 ```
 
-###### Layer
+##### Layer
 
 The layer can be defined using method `setLayer(Layer $layer)`. The cases of the `CyrildeWit\MapsUrls\Enums\Layer` enum are:
 
@@ -419,41 +496,48 @@ Layer::Traffic;
 Layer::Bicycling;
 ```
 
+`Layer::None` writes `layer=none`, which asks Google for a map with no layer on top. Leaving the layer unset omits the parameter instead. The two are not the same request, though they usually render the same map.
+
 Example:
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
+use CyrildeWit\MapsUrls\Enums\Layer;
 
 $displayMapAction = (new DisplayMapAction())
     ->setLayer(Layer::Traffic);
 ```
 
-###### Magic make constructor
+##### Creating from an array
 
-To instantiate a display street view panorama action with initial query parameters values, you can make use of the magic `DirectionsAction::make(array $options)` method.
+See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
-use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\UrlGenerator;
+use CyrildeWit\MapsUrls\Actions\DisplayMapAction;
+use CyrildeWit\MapsUrls\Enums\BaseMap;
+use CyrildeWit\MapsUrls\Enums\Layer;
 
-$displayMapAction = DirectionsAction::make([
+$displayMapAction = DisplayMapAction::make([
      'center' => [-33.8569, 151.2152],
      'zoom' => 10,
      'basemap' => BaseMap::Satellite,
      'layer' => Layer::Transit,
 ]);
+$displayMapUrl = (new UrlGenerator($displayMapAction))->generate();
 ```
 
-`basemap` and `layer` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+Output `$displayMapUrl`: `https://www.google.com/maps/@?api=1&map_action=map&center=-33.8569%2C151.2152&zoom=10&basemap=satellite&layer=transit`
 
 #### Display a Street View panorama
 
 From the official documentation: "Launch an interactive panorama image."
 
-###### Map action
+##### Map action
 
-The `map_action` query parameter is required and is therefore added by default with value `pano`.
+Google requires the `map_action` parameter. This action always writes `map_action=pano`, and there is no setter for it.
 
-###### Viewpoint
+##### Viewpoint
 
 The viewpoint can be defined using method `setViewpoint(Coordinates|float $latitude, ?float $longitude = null)`. Pass a latitude and a longitude, or a single [`Coordinates`](#coordinates) instance. Passing a latitude on its own throws an `InvalidOption`.
 
@@ -468,7 +552,9 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setViewpoint(new Coordinates(48.857832, 2.295226));
 ```
 
-###### Panorama ID
+`setViewpointLatitude(float $latitude)` and `setViewpointLongitude(float $longitude)` set one half of the pair. The `viewpoint` parameter is only written once both are set, so an action that has a latitude and no longitude generates a URL without a viewpoint rather than a half filled one.
+
+##### Panorama ID
 
 The panorama ID can be defined using method `setPanoramaId(string $id)`.
 
@@ -479,7 +565,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
     ->setPanoramaId('tu510ie_z4ptBZYo2BGEJg');
 ```
 
-###### Heading
+##### Heading
 
 The heading can be defined using method `setHeading(int $degrees)`. Only values from -180 to 360 degrees are expected.
 
@@ -492,7 +578,7 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
 
 The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the heading falls outside that range.
 
-###### Pitch
+##### Pitch
 
 The pitch can be defined using method `setPitch(int $degrees)`. Only values from -90 to 90 degrees are expected.
 
@@ -505,9 +591,9 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
 
 The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the pitch falls outside that range.
 
-###### Fov
+##### Field of view
 
-The fov can be defined using method `setFov(int $degrees)`. Only values from 10 to 100 degrees are expected.
+The field of view can be defined using method `setFov(int $degrees)`. Only values from 10 to 100 degrees are expected.
 
 ```php
 use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
@@ -518,21 +604,25 @@ $displayStreetViewPanoramaAction = (new DisplayStreetViewPanoramaAction())
 
 The `CyrildeWit\MapsUrls\Exceptions\InvalidOption` exception will be thrown when the fov falls outside that range.
 
-###### Magic make constructor
+##### Creating from an array
 
-To instantiate a display street view panorama action with initial query parameters values, you can make use of the magic `DirectionsAction::make(array $options)` method.
+See [creating an action from an array](#creating-an-action-from-an-array) for the shared rules.
 
 ```php
-use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\UrlGenerator;
+use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
 
-$displayStreetViewPanoramaAction = DirectionsAction::make([
+$displayStreetViewPanoramaAction = DisplayStreetViewPanoramaAction::make([
     'viewpoint' => [48.857832, 2.295226],
     'pano' => 'tu510ie_z4ptBZYo2BGEJg',
     'heading' => 120,
     'pitch' => 40,
     'fov' => 80,
 ]);
+$panoramaUrl = (new UrlGenerator($displayStreetViewPanoramaAction))->generate();
 ```
+
+Output `$panoramaUrl`: `https://www.google.com/maps/@?api=1&map_action=pano&viewpoint=48.857832%2C2.295226&pano=tu510ie_z4ptBZYo2BGEJg&heading=120&pitch=40&fov=80`
 
 ## Changelog
 
@@ -546,7 +636,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 - **Cyril de Wit** - _Author_ - [cyrildewit](https://github.com/cyrildewit)
 
-See also the list of [contributors](https://github.com/cyrildewit/eloquent-viewable/graphs/contributors) who
+See also the list of [contributors](https://github.com/cyrildewit/php-maps-urls/graphs/contributors) who
 participated in this project.
 
 ## License
