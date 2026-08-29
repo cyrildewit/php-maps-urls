@@ -13,7 +13,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
 
     protected array $queryParametersSetters = [
         'viewpoint' => 'setViewpoint',
-        'pano' => 'setPano',
+        'pano' => 'setPanoramaId',
         'heading' => 'setHeading',
         'pitch' => 'setPitch',
         'fov' => 'setFov',
