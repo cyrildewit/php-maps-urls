@@ -4,8 +4,6 @@ namespace CyrildeWit\MapsUrls\Actions;
 
 use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
-use CyrildeWit\MapsUrls\Exceptions\InvalidBaseMap;
-use CyrildeWit\MapsUrls\Exceptions\InvalidLayer;
 
 class DisplayMapAction extends AbstractAction
 {
@@ -19,17 +17,9 @@ class DisplayMapAction extends AbstractAction
         'layer' => 'setLayer',
     ];
 
-    protected array $baseMaps = [
-        BaseMap::NONE,
-        BaseMap::TRAFFIC,
-        BaseMap::BICYCLING,
-    ];
-
-    protected array $layers = [
-        Layer::NONE,
-        Layer::TRANSIT,
-        Layer::TRAFFIC,
-        Layer::BICYCLING,
+    protected array $queryParametersEnums = [
+        'basemap' => BaseMap::class,
+        'layer' => Layer::class,
     ];
 
     protected ?float $centerLatitude = null;
@@ -37,9 +27,9 @@ class DisplayMapAction extends AbstractAction
 
     protected ?int $zoom = null;
 
-    protected ?string $baseMap = null;
+    protected ?BaseMap $baseMap = null;
 
-    protected ?string $layer = null;
+    protected ?Layer $layer = null;
 
     public function getParameters(): array
     {
@@ -47,8 +37,8 @@ class DisplayMapAction extends AbstractAction
             'map_action' => $this->getMapAction(),
             'center' => $this->getCenter(),
             'zoom' => $this->getZoom(),
-            'basemap' => $this->getBaseMap(),
-            'layer' => $this->getLayer(),
+            'basemap' => $this->getBaseMap()?->value,
+            'layer' => $this->getLayer()?->value,
         ];
     }
 
@@ -76,12 +66,12 @@ class DisplayMapAction extends AbstractAction
         return $this->zoom;
     }
 
-    public function getBaseMap(): ?string
+    public function getBaseMap(): ?BaseMap
     {
         return $this->baseMap;
     }
 
-    public function getLayer(): ?string
+    public function getLayer(): ?Layer
     {
         return $this->layer;
     }
@@ -115,35 +105,17 @@ class DisplayMapAction extends AbstractAction
         return $this;
     }
 
-    public function setBaseMap(string $baseMap): self
+    public function setBaseMap(BaseMap $baseMap): self
     {
-        if ($this->invalidBaseMap($baseMap)) {
-            throw InvalidBaseMap::unsupportedBaseMap($baseMap);
-        }
-
         $this->baseMap = $baseMap;
 
         return $this;
     }
 
-    public function setLayer(string $layer): self
+    public function setLayer(Layer $layer): self
     {
-        if ($this->invalidLayer($layer)) {
-            throw InvalidLayer::unsupportedLayer($layer);
-        }
-
         $this->layer = $layer;
 
         return $this;
-    }
-
-    protected function invalidBaseMap(string $baseMap): bool
-    {
-        return ! in_array(strtolower($baseMap), $this->baseMaps);
-    }
-
-    protected function invalidLayer(string $layer): bool
-    {
-        return ! in_array(strtolower($layer), $this->layers);
     }
 }
