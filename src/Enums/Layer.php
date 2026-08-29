@@ -2,10 +2,10 @@
 
 namespace CyrildeWit\MapsUrls\Enums;
 
-class Layer
+enum Layer: string
 {
-    const NONE = 'none';
-    const TRANSIT = 'transit';
-    const TRAFFIC = 'traffic';
-    const BICYCLING = 'bicycling';
+    case None = 'none';
+    case Transit = 'transit';
+    case Traffic = 'traffic';
+    case Bicycling = 'bicycling';
 }

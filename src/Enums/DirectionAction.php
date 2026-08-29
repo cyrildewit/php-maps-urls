@@ -2,7 +2,7 @@
 
 namespace CyrildeWit\MapsUrls\Enums;
 
-class DirectionAction
+enum DirectionAction: string
 {
-    const NAVIGATE = 'navigate';
+    case Navigate = 'navigate';
 }

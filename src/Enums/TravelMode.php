@@ -2,10 +2,10 @@
 
 namespace CyrildeWit\MapsUrls\Enums;
 
-class TravelMode
+enum TravelMode: string
 {
-    const DRIVING = 'driving';
-    const WALKING = 'walking';
-    const BICYCLING = 'bicycling';
-    const TRANSIT = 'transit';
+    case Driving = 'driving';
+    case Walking = 'walking';
+    case Bicycling = 'bicycling';
+    case Transit = 'transit';
 }
