@@ -2,7 +2,7 @@
     "name": "cyrildewit/php-maps-urls",
     "description": "Generate URLs for the Google Maps URLs API",
     "type": "library",
-    "license": "Apache-2.0",
+    "license": "MIT",
     "homepage": "https://github.com/cyrildewit/php-maps-urls",
     "keywords": [
         "php",
@@ -30,7 +30,9 @@
     "require-dev": {
         "laravel/pint": "^1.21",
         "pestphp/pest": "^5.1",
-        "phpstan/phpstan": "^2.1"
+        "pestphp/pest-plugin-rector": "^5.0",
+        "phpstan/phpstan": "^2.1",
+        "rector/rector": "^2.3"
     },
     "autoload": {
         "psr-4": {
@@ -47,7 +49,8 @@
         "test:lint": "pint --test",
         "test": "pest",
         "test:coverage": "pest --coverage-clover build/coverage.xml -min=100",
-        "test:types": "phpstan analyse --memory-limit=512M"
+        "test:types": "phpstan analyse --memory-limit=512M",
+        "rector": "rector"
     },
     "config": {
         "allow-plugins": {

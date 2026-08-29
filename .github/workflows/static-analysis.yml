@@ -49,5 +49,8 @@ jobs:
       - name: Style
         run: composer run test:lint
 
+      - name: Rector
+        run: composer run rector -- --dry-run
+
       - name: Types
         run: composer run test:types
