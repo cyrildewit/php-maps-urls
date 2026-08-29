@@ -1,0 +1,140 @@
+<?php
+
+use CyrildeWit\MapsUrls\Actions\DisplayStreetViewPanoramaAction;
+use CyrildeWit\MapsUrls\Exceptions\InvalidFov;
+use CyrildeWit\MapsUrls\Exceptions\InvalidHeading;
+use CyrildeWit\MapsUrls\Exceptions\InvalidPitch;
+
+it('exposes the panorama endpoint', function () {
+    expect((new DisplayStreetViewPanoramaAction())->getEndpoint())
+        ->toBe(DisplayStreetViewPanoramaAction::ENDPOINT);
+});
+
+it('builds the query parameters', function () {
+    $action = (new DisplayStreetViewPanoramaAction())
+        ->setViewpoint(20, 40)
+        ->setPanoramaId('abcdefghijklmnopqrstuvwxyz')
+        ->setHeading(100)
+        ->setPitch(40)
+        ->setFov(20);
+
+    expect($action->getParameters())->toBe([
+        'map_action' => 'pano',
+        'viewpoint' => '20,40',
+        'pano' => 'abcdefghijklmnopqrstuvwxyz',
+        'heading' => 100,
+        'pitch' => 40,
+        'fov' => 20,
+    ]);
+});
+
+it('formats the viewpoint as a comma separated pair', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setViewpoint(20, 40);
+
+    expect($action->getViewpoint())->toBe('20,40');
+});
+
+it('has no viewpoint until both coordinates are set', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setViewpointLongitude(40);
+
+    expect($action->getViewpoint())->toBeNull();
+});
+
+it('keeps a viewpoint on the equator or the prime meridian', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setViewpoint(0, 0);
+
+    expect($action->getViewpoint())->toBe('0,0');
+});
+
+it('builds null parameters when nothing is set', function () {
+    expect((new DisplayStreetViewPanoramaAction())->getParameters())->toBe([
+        'map_action' => DisplayStreetViewPanoramaAction::MAP_ACTION,
+        'viewpoint' => null,
+        'pano' => null,
+        'heading' => null,
+        'pitch' => null,
+        'fov' => null,
+    ]);
+});
+
+it('builds from options', function () {
+    $action = DisplayStreetViewPanoramaAction::make([
+        'viewpoint' => [20, 40],
+        'pano' => 'abcdefghijklmnopqrstuvwxyz',
+        'heading' => 100,
+        'pitch' => 40,
+        'fov' => 20,
+    ]);
+
+    expect($action->getViewpoint())->toBe('20,40')
+        ->and($action->getPanoramaId())->toBe('abcdefghijklmnopqrstuvwxyz')
+        ->and($action->getHeading())->toBe(100)
+        ->and($action->getPitch())->toBe(40)
+        ->and($action->getFov())->toBe(20);
+});
+
+it('accepts a heading within range', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setHeading(300);
+
+    expect($action->getHeading())->toBe(300);
+});
+
+it('accepts a heading on the edge of the range', function (int $degrees) {
+    expect((new DisplayStreetViewPanoramaAction())->setHeading($degrees)->getHeading())
+        ->toBe($degrees);
+})->with([-180, 360]);
+
+it('rejects a heading outside the -180 to 360 range', function (int $degrees) {
+    (new DisplayStreetViewPanoramaAction())->setHeading($degrees);
+})->with([-200, 361])->throws(InvalidHeading::class);
+
+it('accepts a pitch within range', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setPitch(20);
+
+    expect($action->getPitch())->toBe(20);
+});
+
+it('accepts a pitch on the edge of the range', function (int $degrees) {
+    expect((new DisplayStreetViewPanoramaAction())->setPitch($degrees)->getPitch())
+        ->toBe($degrees);
+})->with([-90, 80]);
+
+it('rejects a pitch outside the -90 to 80 range', function (int $degrees) {
+    (new DisplayStreetViewPanoramaAction())->setPitch($degrees);
+})->with([-91, 120])->throws(InvalidPitch::class);
+
+it('accepts a fov within range', function () {
+    $action = (new DisplayStreetViewPanoramaAction())->setFov(40);
+
+    expect($action->getFov())->toBe(40);
+});
+
+it('accepts a fov on the edge of the range', function (int $degrees) {
+    expect((new DisplayStreetViewPanoramaAction())->setFov($degrees)->getFov())
+        ->toBe($degrees);
+})->with([10, 100]);
+
+it('rejects a fov outside the 10 to 100 range', function (int $degrees) {
+    (new DisplayStreetViewPanoramaAction())->setFov($degrees);
+})->with([9, 120])->throws(InvalidFov::class);
+
+it('reports the accepted heading range', function () {
+    (new DisplayStreetViewPanoramaAction())->setHeading(400);
+})->throws(
+    InvalidHeading::class,
+    "Invalid heading provided. Expected from -180 to 360 degrees. Received '400'."
+);
+
+it('reports the accepted pitch range', function () {
+    (new DisplayStreetViewPanoramaAction())->setPitch(120);
+})->throws(
+    InvalidPitch::class,
+    "Invalid pitch provided. Expected from -90 to 80 degrees. Received '120'."
+);
+
+it('reports the accepted fov range', function () {
+    (new DisplayStreetViewPanoramaAction())->setFov(9);
+})->throws(
+    InvalidFov::class,
+    "Invalid fov provided. Expected from 10 to 100 degrees. Received '9'."
+);

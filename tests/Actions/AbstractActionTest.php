@@ -1,106 +1,48 @@
 <?php
 
-namespace CyrildeWit\MapsUrls\Tests\Actions;
+use CyrildeWit\MapsUrls\Tests\Fixtures\TestAbstractAction;
 
-use CyrildeWit\MapsUrls\Actions\AbstractAction;
-use PHPUnit\Framework\TestCase;
+it('passes each option to its mapped setter', function () {
+    $action = TestAbstractAction::make([
+        'string' => 'foo',
+        'int' => 22,
+        'float' => 6.84,
+        'array' => ['foo', 'bar'],
+    ]);
 
-class AbstractActionTest extends TestCase
-{
-    public function testMake()
-    {
-        $action = TestAbstractAction::make([
-            'string' => 'foo',
-            'int' => 22,
-            'float' => 6.84,
-            'array' => [
-                'foo',
-                'bar',
-            ],
-        ]);
+    expect($action->getStringProp())->toBe('foo')
+        ->and($action->getIntProp())->toBe(22)
+        ->and($action->getFloatProp())->toBe(6.84)
+        ->and($action->getArrayProp())->toBe(['foo', 'bar']);
+});
 
-        $this->assertEquals('foo', $action->getStringProp());
-        $this->assertEquals(22, $action->getIntProp());
-        $this->assertEquals(6.84, $action->getFloatProp());
-        $this->assertEquals([
-            'foo',
-            'bar',
-        ], $action->getArrayProp());
-    }
-}
+it('ignores options without a mapped setter', function () {
+    $action = TestAbstractAction::make([
+        'string' => 'foo',
+        'unmapped' => 'bar',
+    ]);
 
-class TestAbstractAction extends AbstractAction
-{
-    protected array $queryParametersSetters = [
-        'string' => 'setStringProp',
-        'int' => 'setIntProp',
-        'float' => 'setFloatProp',
-        'array' => 'setArrayProp',
-    ];
+    expect($action->getStringProp())->toBe('foo');
+});
 
-    public ?string $stringProp = null;
+it('spreads an array over a setter that takes more than one argument', function () {
+    $action = TestAbstractAction::make(['pair' => [52.1, 4.2]]);
 
-    public ?string $intProp = null;
+    expect($action->getPairProp())->toBe('52.1,4.2');
+});
 
-    public ?float $floatProp = null;
+it('spreads a keyed array as named arguments', function () {
+    $action = TestAbstractAction::make(['pair' => ['second' => 4.2, 'first' => 52.1]]);
 
-    public ?array $arrayProp = null;
+    expect($action->getPairProp())->toBe('52.1,4.2');
+});
 
-    public function getParameters(): array
-    {
-        return [];
-    }
+it('passes an array whole to a setter that takes one argument', function () {
+    $action = TestAbstractAction::make(['array' => ['foo', 'bar']]);
 
-    public function getEndpoint(): string
-    {
-        return '';
-    }
+    expect($action->getArrayProp())->toBe(['foo', 'bar']);
+});
 
-    public function getStringProp(): ?string
-    {
-        return $this->stringProp;
-    }
-
-    public function getIntProp(): ?int
-    {
-        return $this->intProp;
-    }
-
-    public function getFloatProp(): ?float
-    {
-        return $this->floatProp;
-    }
-
-    public function getArrayProp(): ?array
-    {
-        return $this->arrayProp;
-    }
-
-    public function setStringProp(string $value): self
-    {
-        $this->stringProp = $value;
-
-        return $this;
-    }
-
-    public function setIntProp(int $value): self
-    {
-        $this->intProp = $value;
-
-        return $this;
-    }
-
-    public function setFloatProp(float $value): self
-    {
-        $this->floatProp = $value;
-
-        return $this;
-    }
-
-    public function setArrayProp(array $array): self
-    {
-        $this->arrayProp = $array;
-
-        return $this;
-    }
-}
+it('returns an instance of the action it was called on', function () {
+    expect(TestAbstractAction::make([]))->toBeInstanceOf(TestAbstractAction::class);
+});

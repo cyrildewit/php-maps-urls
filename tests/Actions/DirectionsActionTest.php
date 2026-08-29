@@ -1,94 +1,116 @@
 <?php
 
-namespace CyrildeWit\MapsUrls\Tests\Actions;
-
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
-use PHPUnit\Framework\TestCase;
 
-class DirectionsActionTest extends TestCase
-{
-    public function testGetEndpoint()
-    {
-        $action = new DirectionsAction();
+it('exposes the directions endpoint', function () {
+    expect((new DirectionsAction())->getEndpoint())->toBe(DirectionsAction::ENDPOINT);
+});
 
-        $this->assertEquals(DirectionsAction::ENDPOINT, $action->getEndpoint());
-    }
+it('builds the query parameters', function () {
+    $action = (new DirectionsAction())
+        ->setOrigin('Amsterdam')
+        ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
+        ->setDestination('Monnickendam')
+        ->setDestinationPlaceId('abcdefghijklmnopqrstuvwxyz')
+        ->setTravelMode(TravelMode::Walking)
+        ->setDirectionAction(DirectionAction::Navigate)
+        ->setWaypoints(['Rotterdam', 'Utrecht'])
+        ->setWaypointPlaceIds(['abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz']);
 
-    public function testGetParameters()
-    {
-        $action = (new DirectionsAction())
-            ->setOrigin('Amsterdam')
-            ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
-            ->setDestination('Monnickendam')
-            ->setDestinationPlaceId('abcdefghijklmnopqrstuvwxyz')
-            ->setTravelMode(TravelMode::Walking)
-            ->setDirectionAction(DirectionAction::Navigate)
-            ->setWaypoints(['Rotterdam', 'Utrecht'])
-            ->setWaypointPlaceIds(['abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz']);
+    expect($action->getParameters())->toBe([
+        'origin' => 'Amsterdam',
+        'origin_place_id' => 'abcdefghijklmnopqrstuvwxyz',
+        'destination' => 'Monnickendam',
+        'destination_place_id' => 'abcdefghijklmnopqrstuvwxyz',
+        'travelmode' => 'walking',
+        'dir_action' => 'navigate',
+        'waypoints' => 'Rotterdam|Utrecht',
+        'waypoint_place_ids' => 'abcdefghijklmnopqrstuvwxyz|abcdefghijklmnopqrstuvwxyz',
+    ]);
+});
 
-        $this->assertEquals([
-            'origin' => 'Amsterdam',
-            'origin_place_id' => 'abcdefghijklmnopqrstuvwxyz',
-            'destination' => 'Monnickendam',
-            'destination_place_id' => 'abcdefghijklmnopqrstuvwxyz',
-            'travelmode' => 'walking',
-            'dir_action' => 'navigate',
-            'waypoints' => 'Rotterdam|Utrecht',
-            'waypoint_place_ids' => 'abcdefghijklmnopqrstuvwxyz|abcdefghijklmnopqrstuvwxyz',
-        ], $action->getParameters());
-    }
+it('builds null parameters when nothing is set', function () {
+    expect((new DirectionsAction())->getParameters())->toBe([
+        'origin' => null,
+        'origin_place_id' => null,
+        'destination' => null,
+        'destination_place_id' => null,
+        'travelmode' => null,
+        'dir_action' => null,
+        'waypoints' => null,
+        'waypoint_place_ids' => null,
+    ]);
+});
 
-    public function testSetTravelMode()
-    {
-        $action = (new DirectionsAction())->setTravelMode(TravelMode::Driving);
+it('leaves waypoints out when the list is empty', function () {
+    $action = (new DirectionsAction())
+        ->setWaypoints([])
+        ->setWaypointPlaceIds([]);
 
-        $this->assertEquals(TravelMode::Driving, $action->getTravelMode());
-    }
+    expect($action->getParameters())
+        ->toMatchArray(['waypoints' => null, 'waypoint_place_ids' => null]);
+});
 
-    public function testSetDirectionAction()
-    {
-        $action = (new DirectionsAction())->setDirectionAction(DirectionAction::Navigate);
+it('builds the plain options from strings and arrays', function () {
+    $action = DirectionsAction::make([
+        'origin' => 'Amsterdam',
+        'origin_place_id' => 'abcdefghijklmnopqrstuvwxyz',
+        'destination' => 'Monnickendam',
+        'destination_place_id' => 'zyxwvutsrqponmlkjihgfedcba',
+        'waypoints' => ['Rotterdam', 'Utrecht'],
+        'waypoint_place_ids' => ['abc', 'def'],
+    ]);
 
-        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
-    }
+    expect($action->getOrigin())->toBe('Amsterdam')
+        ->and($action->getOriginPlaceId())->toBe('abcdefghijklmnopqrstuvwxyz')
+        ->and($action->getDestination())->toBe('Monnickendam')
+        ->and($action->getDestinationPlaceId())->toBe('zyxwvutsrqponmlkjihgfedcba')
+        ->and($action->getWaypoints())->toBe(['Rotterdam', 'Utrecht'])
+        ->and($action->getWaypointPlaceIds())->toBe(['abc', 'def']);
+});
 
-    public function testMakeResolvesEnumsFromStrings()
-    {
-        $action = DirectionsAction::make([
-            'travelmode' => 'WALKING',
-            'dir_action' => 'navigate',
-        ]);
+it('stores the travel mode', function () {
+    $action = (new DirectionsAction())->setTravelMode(TravelMode::Driving);
 
-        $this->assertEquals(TravelMode::Walking, $action->getTravelMode());
-        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
-    }
+    expect($action->getTravelMode())->toBe(TravelMode::Driving);
+});
 
-    public function testMakeAcceptsEnumInstances()
-    {
-        $action = DirectionsAction::make([
-            'travelmode' => TravelMode::Transit,
-            'dir_action' => DirectionAction::Navigate,
-        ]);
+it('stores the direction action', function () {
+    $action = (new DirectionsAction())->setDirectionAction(DirectionAction::Navigate);
 
-        $this->assertEquals(TravelMode::Transit, $action->getTravelMode());
-        $this->assertEquals(DirectionAction::Navigate, $action->getDirectionAction());
-    }
+    expect($action->getDirectionAction())->toBe(DirectionAction::Navigate);
+});
 
-    public function testMakeThrowsOnUnsupportedTravelMode()
-    {
-        $this->expectException(InvalidOption::class);
-        $this->expectExceptionMessage("Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 'unsupported'.");
+it('resolves enums from strings regardless of casing', function () {
+    $action = DirectionsAction::make([
+        'travelmode' => 'WALKING',
+        'dir_action' => 'navigate',
+    ]);
 
-        DirectionsAction::make(['travelmode' => 'unsupported']);
-    }
+    expect($action->getTravelMode())->toBe(TravelMode::Walking)
+        ->and($action->getDirectionAction())->toBe(DirectionAction::Navigate);
+});
 
-    public function testMakeThrowsOnUnsupportedDirectionAction()
-    {
-        $this->expectException(InvalidOption::class);
+it('accepts enum instances', function () {
+    $action = DirectionsAction::make([
+        'travelmode' => TravelMode::Transit,
+        'dir_action' => DirectionAction::Navigate,
+    ]);
 
-        DirectionsAction::make(['dir_action' => 'unsupported']);
-    }
-}
+    expect($action->getTravelMode())->toBe(TravelMode::Transit)
+        ->and($action->getDirectionAction())->toBe(DirectionAction::Navigate);
+});
+
+it('rejects an unsupported travel mode', function () {
+    DirectionsAction::make(['travelmode' => 'unsupported']);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 'unsupported'."
+);
+
+it('rejects an unsupported direction action', function () {
+    DirectionsAction::make(['dir_action' => 'unsupported']);
+})->throws(InvalidOption::class);
