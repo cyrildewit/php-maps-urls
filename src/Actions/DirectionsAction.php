@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyrildeWit\MapsUrls\Actions;
 
 use BackedEnum;
+use CyrildeWit\MapsUrls\Enums\Avoid;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use Override;
@@ -24,6 +25,7 @@ class DirectionsAction extends AbstractAction
         'dir_action' => 'setDirectionAction',
         'waypoints' => 'setWaypoints',
         'waypoint_place_ids' => 'setWaypointPlaceIds',
+        'avoid' => 'setAvoid',
     ];
 
     /** @var array<string, class-string<BackedEnum>> */
@@ -31,6 +33,7 @@ class DirectionsAction extends AbstractAction
     protected array $queryParametersEnums = [
         'travelmode' => TravelMode::class,
         'dir_action' => DirectionAction::class,
+        'avoid' => Avoid::class,
     ];
 
     protected ?string $origin = null;
@@ -51,6 +54,9 @@ class DirectionsAction extends AbstractAction
     /** @var list<string>|null */
     protected ?array $waypointPlaceIds = null;
 
+    /** @var list<Avoid>|null */
+    protected ?array $avoid = null;
+
     /**
      * @return array<string, string|null>
      */
@@ -58,6 +64,7 @@ class DirectionsAction extends AbstractAction
     {
         $waypoints = $this->getWaypoints();
         $waypointPlaceIds = $this->getWaypointPlaceIds();
+        $avoid = $this->getAvoid();
 
         return [
             'origin' => $this->getOrigin(),
@@ -68,6 +75,7 @@ class DirectionsAction extends AbstractAction
             'dir_action' => $this->getDirectionAction()?->value,
             'waypoints' => $waypoints ? $this->formatArray($waypoints) : null,
             'waypoint_place_ids' => $waypointPlaceIds ? $this->formatArray($waypointPlaceIds) : null,
+            'avoid' => $avoid ? $this->formatAvoid($avoid) : null,
         ];
     }
 
@@ -122,6 +130,14 @@ class DirectionsAction extends AbstractAction
         return $this->waypointPlaceIds;
     }
 
+    /**
+     * @return list<Avoid>|null
+     */
+    public function getAvoid(): ?array
+    {
+        return $this->avoid;
+    }
+
     public function hasWaypoints(): bool
     {
         return ! empty($this->waypoints);
@@ -130,6 +146,11 @@ class DirectionsAction extends AbstractAction
     public function hasWaypointPlaceIds(): bool
     {
         return ! empty($this->waypointPlaceIds);
+    }
+
+    public function hasAvoid(): bool
+    {
+        return ! empty($this->avoid);
     }
 
     public function setOrigin(string $origin): self
@@ -194,11 +215,26 @@ class DirectionsAction extends AbstractAction
         return $this;
     }
 
+    public function setAvoid(Avoid ...$avoid): self
+    {
+        $this->avoid = array_values($avoid);
+
+        return $this;
+    }
+
     /**
      * @param  list<string>  $values
      */
     protected function formatArray(array $values): string
     {
         return implode('|', $values);
+    }
+
+    /**
+     * @param  list<Avoid>  $avoid
+     */
+    protected function formatAvoid(array $avoid): string
+    {
+        return implode(',', array_column($avoid, 'value'));
     }
 }

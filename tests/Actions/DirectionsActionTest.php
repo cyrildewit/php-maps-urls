@@ -3,6 +3,7 @@
 declare(strict_types=1);
 
 use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\Avoid;
 use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
@@ -20,7 +21,8 @@ it('builds the query parameters', function (): void {
         ->setTravelMode(TravelMode::Walking)
         ->setDirectionAction(DirectionAction::Navigate)
         ->setWaypoints(['Rotterdam', 'Utrecht'])
-        ->setWaypointPlaceIds(['abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz']);
+        ->setWaypointPlaceIds(['abcdefghijklmnopqrstuvwxyz', 'abcdefghijklmnopqrstuvwxyz'])
+        ->setAvoid(Avoid::Tolls, Avoid::Ferries);
 
     expect($action->getParameters())->toBe([
         'origin' => 'Amsterdam',
@@ -31,6 +33,7 @@ it('builds the query parameters', function (): void {
         'dir_action' => 'navigate',
         'waypoints' => 'Rotterdam|Utrecht',
         'waypoint_place_ids' => 'abcdefghijklmnopqrstuvwxyz|abcdefghijklmnopqrstuvwxyz',
+        'avoid' => 'tolls,ferries',
     ]);
 });
 
@@ -44,6 +47,7 @@ it('builds null parameters when nothing is set', function (): void {
         'dir_action' => null,
         'waypoints' => null,
         'waypoint_place_ids' => null,
+        'avoid' => null,
     ]);
 });
 
@@ -54,6 +58,12 @@ it('leaves waypoints out when the list is empty', function (): void {
 
     expect($action->getParameters())
         ->toMatchArray(['waypoints' => null, 'waypoint_place_ids' => null]);
+});
+
+it('leaves avoid out when the list is empty', function (): void {
+    $action = (new DirectionsAction)->setAvoid();
+
+    expect($action->getParameters())->toMatchArray(['avoid' => null]);
 });
 
 it('builds the plain options from strings and arrays', function (): void {
@@ -86,6 +96,47 @@ it('keeps the hyphen in the two-wheeler travel mode', function (): void {
     expect($action->getTravelMode())->toBe(TravelMode::TwoWheeler)
         ->and($action->getParameters()['travelmode'])->toBe('two-wheeler');
 });
+
+it('stores the features to avoid', function (): void {
+    $action = (new DirectionsAction)->setAvoid(Avoid::Tolls);
+
+    expect($action->getAvoid())->toBe([Avoid::Tolls])
+        ->and($action->hasAvoid())->toBeTrue();
+});
+
+it('reports no features to avoid when none are set', function (): void {
+    expect((new DirectionsAction)->hasAvoid())->toBeFalse();
+});
+
+it('separates the features to avoid with commas', function (): void {
+    $action = (new DirectionsAction)->setAvoid(Avoid::Ferries, Avoid::Highways, Avoid::Tolls);
+
+    expect($action->getParameters()['avoid'])->toBe('ferries,highways,tolls');
+});
+
+it('resolves a list of enums from strings', function (): void {
+    $action = DirectionsAction::make(['avoid' => ['tolls', 'ferries']]);
+
+    expect($action->getAvoid())->toBe([Avoid::Tolls, Avoid::Ferries]);
+});
+
+it('resolves a list that mixes strings and enum instances', function (): void {
+    $action = DirectionsAction::make(['avoid' => ['tolls', Avoid::Ferries]]);
+
+    expect($action->getAvoid())->toBe([Avoid::Tolls, Avoid::Ferries]);
+});
+
+it('wraps a single value in a list', function (): void {
+    expect(DirectionsAction::make(['avoid' => 'tolls'])->getAvoid())->toBe([Avoid::Tolls])
+        ->and(DirectionsAction::make(['avoid' => Avoid::Tolls])->getAvoid())->toBe([Avoid::Tolls]);
+});
+
+it('rejects an unsupported value inside a list', function (): void {
+    DirectionsAction::make(['avoid' => ['tolls', 'trains']]);
+})->throws(
+    InvalidOption::class,
+    "Invalid value provided for 'avoid'. Expected one of 'ferries', 'highways', 'tolls'. Received 'trains'."
+);
 
 it('stores the direction action', function (): void {
     $action = (new DirectionsAction)->setDirectionAction(DirectionAction::Navigate);

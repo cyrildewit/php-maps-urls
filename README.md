@@ -250,6 +250,26 @@ $directionsAction = (new DirectionsAction())
     ]);
 ```
 
+###### Avoid
+
+The route features to avoid can be defined using method `setAvoid(Avoid ...$avoid)`. The cases of the `CyrildeWit\MapsUrls\Enums\Avoid` enum are:
+
+```php
+Avoid::Ferries;
+Avoid::Highways;
+Avoid::Tolls;
+```
+
+Google treats these as a preference rather than a rule. A route that cannot avoid the feature is still returned.
+
+```php
+use CyrildeWit\MapsUrls\Actions\DirectionsAction;
+use CyrildeWit\MapsUrls\Enums\Avoid;
+
+$directionsAction = (new DirectionsAction())
+    ->setAvoid(Avoid::Tolls, Avoid::Ferries);
+```
+
 ###### Magic make constructor
 
 To instantiate a directions action with initial query parameters values, you can make use of the magic `DirectionsAction::make(array $options)` method.
@@ -272,17 +292,24 @@ $directionsAction = DirectionsAction::make([
         'ChIJAVkDPzdOqEcRcDteW0YgIQQ',
         'ChIJD7fiBh9u5kcRYJSMaMOCCwQ'
     ],
+    'avoid' => [
+        Avoid::Tolls,
+        Avoid::Ferries
+    ],
 ]);
 ```
 
-`travelmode` and `dir_action` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
+`travelmode`, `dir_action` and `avoid` also accept a plain string, which `make()` resolves to the enum case backed by exactly that value. Anything else, casing included, throws `CyrildeWit\MapsUrls\Exceptions\InvalidOption`.
 
 ```php
 $directionsAction = DirectionsAction::make([
     'travelmode' => 'driving',
     'dir_action' => 'navigate',
+    'avoid' => ['tolls', 'ferries'],
 ]);
 ```
+
+Because `avoid` takes a list, `make()` accepts one value on its own as well. `'avoid' => 'tolls'` and `'avoid' => ['tolls']` build the same action.
 
 #### Displaying a map
 

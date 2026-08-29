@@ -36,9 +36,13 @@ abstract class AbstractAction
 
             $enum = $enums[$queryParameter] ?? null;
 
-            if ($enum !== null && ! $value instanceof $enum) {
-                $value = (is_string($value) ? $enum::tryFrom($value) : null)
-                    ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
+            if ($enum !== null) {
+                $value = $action->setterTakesList($setter)
+                    ? array_map(
+                        static fn (mixed $case): BackedEnum => static::resolveEnum($queryParameter, $enum, $case),
+                        is_array($value) ? $value : [$value],
+                    )
+                    : static::resolveEnum($queryParameter, $enum, $value);
             }
 
             $arguments = is_array($value) && $action->setterTakesMultipleArguments($setter)
@@ -75,12 +79,34 @@ abstract class AbstractAction
     }
 
     /**
+     * @param  class-string<BackedEnum>  $enum
+     *
+     * @throws InvalidOption
+     */
+    protected static function resolveEnum(string $queryParameter, string $enum, mixed $value): BackedEnum
+    {
+        if ($value instanceof BackedEnum && $value::class === $enum) {
+            return $value;
+        }
+
+        return (is_string($value) ? $enum::tryFrom($value) : null)
+            ?? throw InvalidOption::unsupportedValue($queryParameter, $enum, $value);
+    }
+
+    /**
      * Setters like setCenter() take a latitude and a longitude rather than one
      * value, so make() has to spread the option over both parameters.
      */
     protected function setterTakesMultipleArguments(string $setter): bool
     {
-        return new ReflectionMethod($this, $setter)->getNumberOfParameters() > 1;
+        $method = new ReflectionMethod($this, $setter);
+
+        return $method->getNumberOfParameters() > 1 || $method->isVariadic();
+    }
+
+    protected function setterTakesList(string $setter): bool
+    {
+        return new ReflectionMethod($this, $setter)->isVariadic();
     }
 
     /**
