@@ -109,6 +109,8 @@ The query string is built with `http_build_query()`, so a space becomes `+` and 
 
 Every action implements `CyrildeWit\MapsUrls\Action`, is `final readonly`, and takes all of its parameters through the constructor. Pass them as named arguments and leave out the ones you do not need. There are no setters, so an action is safe to build once and reuse anywhere.
 
+The interface has two methods, `endpoint()` and `parameters()`, so you can write your own action for a parameter Google ships before this package catches up. The generator writes `api`, `utm_source` and `utm_campaign` itself, and an action returning one of those throws `InvalidOption` rather than quietly winning or losing the collision.
+
 The parameters are public, so you can read back what an action holds. This is useful for inspecting or testing an action before you generate.
 
 ```php

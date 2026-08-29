@@ -20,6 +20,7 @@ Actions are now immutable and built through their constructor with named argumen
 - Added the `Exceptions\InvalidOption` exception, which replaces the seven per-option exception classes
 - Added range validation to the zoom, which now rejects anything outside 0 to 21
 - Added a check that the number of waypoint place IDs matches the number of waypoints. Google matches the two lists by position, so a short list shifted every waypoint after it onto the wrong ID
+- Added a guard against an action writing `api`, `utm_source` or `utm_campaign`. Those belong to `UrlGenerator`, and an action returning one used to override it, producing a URL without the `api=1` that Google requires
 - Added the required-parameter rules Google documents. `Actions\Search` takes the query as a required argument, `Actions\StreetViewPanorama` rejects an action with neither a viewpoint nor a panorama ID, and `Actions\Directions` rejects a place ID without the origin or destination it belongs to. Each of these produced a URL that Google could not read
 - Added `declare(strict_types=1)` and native type declarations across the package
 

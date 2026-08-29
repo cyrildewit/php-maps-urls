@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace CyrildeWit\MapsUrls\Exceptions;
 
 use BackedEnum;
+use CyrildeWit\MapsUrls\Action;
 use Exception;
 
 class InvalidOption extends Exception
@@ -47,6 +48,17 @@ class InvalidOption extends Exception
     public static function waypointPlaceIdCountMismatch(int $waypoints, int $placeIds): self
     {
         return new self("Invalid value provided for 'waypoint_place_ids'. Expected one place ID for each of the {$waypoints} waypoints, or none at all. Received {$placeIds}.");
+    }
+
+    /**
+     * @param  list<string>  $queryParameters
+     * @param  class-string<Action>  $action
+     */
+    public static function reservedParameters(array $queryParameters, string $action): self
+    {
+        $reserved = implode("', '", $queryParameters);
+
+        return new self("Invalid parameters returned by {$action}: '{$reserved}'. The URL generator writes them, so an action cannot.");
     }
 
     public static function missingOption(string $queryParameter): self
