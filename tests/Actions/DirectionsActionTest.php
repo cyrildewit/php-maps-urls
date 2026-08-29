@@ -7,11 +7,11 @@ use CyrildeWit\MapsUrls\Enums\DirectionAction;
 use CyrildeWit\MapsUrls\Enums\TravelMode;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
-it('exposes the directions endpoint', function () {
+it('exposes the directions endpoint', function (): void {
     expect((new DirectionsAction)->getEndpoint())->toBe(DirectionsAction::ENDPOINT);
 });
 
-it('builds the query parameters', function () {
+it('builds the query parameters', function (): void {
     $action = (new DirectionsAction)
         ->setOrigin('Amsterdam')
         ->setOriginPlaceId('abcdefghijklmnopqrstuvwxyz')
@@ -34,7 +34,7 @@ it('builds the query parameters', function () {
     ]);
 });
 
-it('builds null parameters when nothing is set', function () {
+it('builds null parameters when nothing is set', function (): void {
     expect((new DirectionsAction)->getParameters())->toBe([
         'origin' => null,
         'origin_place_id' => null,
@@ -47,7 +47,7 @@ it('builds null parameters when nothing is set', function () {
     ]);
 });
 
-it('leaves waypoints out when the list is empty', function () {
+it('leaves waypoints out when the list is empty', function (): void {
     $action = (new DirectionsAction)
         ->setWaypoints([])
         ->setWaypointPlaceIds([]);
@@ -56,7 +56,7 @@ it('leaves waypoints out when the list is empty', function () {
         ->toMatchArray(['waypoints' => null, 'waypoint_place_ids' => null]);
 });
 
-it('builds the plain options from strings and arrays', function () {
+it('builds the plain options from strings and arrays', function (): void {
     $action = DirectionsAction::make([
         'origin' => 'Amsterdam',
         'origin_place_id' => 'abcdefghijklmnopqrstuvwxyz',
@@ -74,19 +74,19 @@ it('builds the plain options from strings and arrays', function () {
         ->and($action->getWaypointPlaceIds())->toBe(['abc', 'def']);
 });
 
-it('stores the travel mode', function () {
+it('stores the travel mode', function (): void {
     $action = (new DirectionsAction)->setTravelMode(TravelMode::Driving);
 
     expect($action->getTravelMode())->toBe(TravelMode::Driving);
 });
 
-it('stores the direction action', function () {
+it('stores the direction action', function (): void {
     $action = (new DirectionsAction)->setDirectionAction(DirectionAction::Navigate);
 
     expect($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });
 
-it('resolves enums from strings regardless of casing', function () {
+it('resolves enums from strings regardless of casing', function (): void {
     $action = DirectionsAction::make([
         'travelmode' => 'WALKING',
         'dir_action' => 'navigate',
@@ -96,7 +96,7 @@ it('resolves enums from strings regardless of casing', function () {
         ->and($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });
 
-it('accepts enum instances', function () {
+it('accepts enum instances', function (): void {
     $action = DirectionsAction::make([
         'travelmode' => TravelMode::Transit,
         'dir_action' => DirectionAction::Navigate,
@@ -106,13 +106,13 @@ it('accepts enum instances', function () {
         ->and($action->getDirectionAction())->toBe(DirectionAction::Navigate);
 });
 
-it('rejects an unsupported travel mode', function () {
+it('rejects an unsupported travel mode', function (): void {
     DirectionsAction::make(['travelmode' => 'unsupported']);
 })->throws(
     InvalidOption::class,
     "Invalid value provided for 'travelmode'. Expected one of 'driving', 'walking', 'bicycling', 'transit'. Received 'unsupported'."
 );
 
-it('rejects an unsupported direction action', function () {
+it('rejects an unsupported direction action', function (): void {
     DirectionsAction::make(['dir_action' => 'unsupported']);
 })->throws(InvalidOption::class);

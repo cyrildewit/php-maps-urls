@@ -12,12 +12,7 @@ class UrlGenerator
 
     const API_VERSION = '1';
 
-    protected AbstractAction $action;
-
-    public function __construct(AbstractAction $action)
-    {
-        $this->action = $action;
-    }
+    public function __construct(protected AbstractAction $action) {}
 
     public function generate(): string
     {

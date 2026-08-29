@@ -9,6 +9,7 @@ class SearchAction extends AbstractAction
     const ENDPOINT = 'search/';
 
     /** @var array<string, string> */
+    #[\Override]
     protected array $queryParametersSetters = [
         'query' => 'setQuery',
         'query_coordinates' => 'setQueryCoordinates',

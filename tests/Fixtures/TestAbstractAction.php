@@ -8,6 +8,7 @@ use CyrildeWit\MapsUrls\Actions\AbstractAction;
 
 class TestAbstractAction extends AbstractAction
 {
+    #[\Override]
     protected array $queryParametersSetters = [
         'string' => 'setStringProp',
         'int' => 'setIntProp',

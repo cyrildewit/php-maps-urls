@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 use CyrildeWit\MapsUrls\Tests\Fixtures\TestAbstractAction;
 
-it('passes each option to its mapped setter', function () {
+it('passes each option to its mapped setter', function (): void {
     $action = TestAbstractAction::make([
         'string' => 'foo',
         'int' => 22,
@@ -18,7 +18,7 @@ it('passes each option to its mapped setter', function () {
         ->and($action->getArrayProp())->toBe(['foo', 'bar']);
 });
 
-it('ignores options without a mapped setter', function () {
+it('ignores options without a mapped setter', function (): void {
     $action = TestAbstractAction::make([
         'string' => 'foo',
         'unmapped' => 'bar',
@@ -27,24 +27,24 @@ it('ignores options without a mapped setter', function () {
     expect($action->getStringProp())->toBe('foo');
 });
 
-it('spreads an array over a setter that takes more than one argument', function () {
+it('spreads an array over a setter that takes more than one argument', function (): void {
     $action = TestAbstractAction::make(['pair' => [52.1, 4.2]]);
 
     expect($action->getPairProp())->toBe('52.1,4.2');
 });
 
-it('spreads a keyed array as named arguments', function () {
+it('spreads a keyed array as named arguments', function (): void {
     $action = TestAbstractAction::make(['pair' => ['second' => 4.2, 'first' => 52.1]]);
 
     expect($action->getPairProp())->toBe('52.1,4.2');
 });
 
-it('passes an array whole to a setter that takes one argument', function () {
+it('passes an array whole to a setter that takes one argument', function (): void {
     $action = TestAbstractAction::make(['array' => ['foo', 'bar']]);
 
     expect($action->getArrayProp())->toBe(['foo', 'bar']);
 });
 
-it('returns an instance of the action it was called on', function () {
+it('returns an instance of the action it was called on', function (): void {
     expect(TestAbstractAction::make([]))->toBeInstanceOf(TestAbstractAction::class);
 });

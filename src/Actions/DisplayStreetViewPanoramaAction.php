@@ -15,6 +15,7 @@ class DisplayStreetViewPanoramaAction extends AbstractAction
     const MAP_ACTION = 'pano';
 
     /** @var array<string, string> */
+    #[\Override]
     protected array $queryParametersSetters = [
         'viewpoint' => 'setViewpoint',
         'pano' => 'setPanoramaId',

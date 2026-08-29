@@ -14,6 +14,7 @@ class DisplayMapAction extends AbstractAction
     const MAP_ACTION = 'map';
 
     /** @var array<string, string> */
+    #[\Override]
     protected array $queryParametersSetters = [
         'center' => 'setCenter',
         'zoom' => 'setZoom',
@@ -22,6 +23,7 @@ class DisplayMapAction extends AbstractAction
     ];
 
     /** @var array<string, class-string<\BackedEnum>> */
+    #[\Override]
     protected array $queryParametersEnums = [
         'basemap' => BaseMap::class,
         'layer' => Layer::class,

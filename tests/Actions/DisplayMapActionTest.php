@@ -7,11 +7,11 @@ use CyrildeWit\MapsUrls\Enums\BaseMap;
 use CyrildeWit\MapsUrls\Enums\Layer;
 use CyrildeWit\MapsUrls\Exceptions\InvalidOption;
 
-it('exposes the display map endpoint', function () {
+it('exposes the display map endpoint', function (): void {
     expect((new DisplayMapAction)->getEndpoint())->toBe(DisplayMapAction::ENDPOINT);
 });
 
-it('builds the query parameters', function () {
+it('builds the query parameters', function (): void {
     $action = (new DisplayMapAction)
         ->setCenter(40, 40)
         ->setZoom(20)
@@ -27,25 +27,25 @@ it('builds the query parameters', function () {
     ]);
 });
 
-it('formats the center as a comma separated pair', function () {
+it('formats the center as a comma separated pair', function (): void {
     $action = (new DisplayMapAction)->setCenter(20, 40);
 
     expect($action->getCenter())->toBe('20,40');
 });
 
-it('has no center until both coordinates are set', function () {
+it('has no center until both coordinates are set', function (): void {
     $action = (new DisplayMapAction)->setCenterLatitude(40);
 
     expect($action->getCenter())->toBeNull();
 });
 
-it('keeps a center on the equator or the prime meridian', function () {
+it('keeps a center on the equator or the prime meridian', function (): void {
     $action = (new DisplayMapAction)->setCenter(0, 0);
 
     expect($action->getCenter())->toBe('0,0');
 });
 
-it('builds null parameters when nothing is set', function () {
+it('builds null parameters when nothing is set', function (): void {
     expect((new DisplayMapAction)->getParameters())->toBe([
         'map_action' => DisplayMapAction::MAP_ACTION,
         'center' => null,
@@ -55,31 +55,31 @@ it('builds null parameters when nothing is set', function () {
     ]);
 });
 
-it('builds the center from options', function () {
+it('builds the center from options', function (): void {
     $action = DisplayMapAction::make(['center' => [52.1, 4.2]]);
 
     expect($action->getCenter())->toBe('52.1,4.2');
 });
 
-it('builds the zoom from options', function () {
+it('builds the zoom from options', function (): void {
     $action = DisplayMapAction::make(['zoom' => 12]);
 
     expect($action->getZoom())->toBe(12);
 });
 
-it('stores the base map', function () {
+it('stores the base map', function (): void {
     $action = (new DisplayMapAction)->setBaseMap(BaseMap::Traffic);
 
     expect($action->getBaseMap())->toBe(BaseMap::Traffic);
 });
 
-it('stores the layer', function () {
+it('stores the layer', function (): void {
     $action = (new DisplayMapAction)->setLayer(Layer::Transit);
 
     expect($action->getLayer())->toBe(Layer::Transit);
 });
 
-it('resolves enums from strings regardless of casing', function () {
+it('resolves enums from strings regardless of casing', function (): void {
     $action = DisplayMapAction::make([
         'basemap' => 'TRAFFIC',
         'layer' => 'transit',
@@ -89,7 +89,7 @@ it('resolves enums from strings regardless of casing', function () {
         ->and($action->getLayer())->toBe(Layer::Transit);
 });
 
-it('accepts enum instances', function () {
+it('accepts enum instances', function (): void {
     $action = DisplayMapAction::make([
         'basemap' => BaseMap::Bicycling,
         'layer' => Layer::None,
@@ -99,13 +99,13 @@ it('accepts enum instances', function () {
         ->and($action->getLayer())->toBe(Layer::None);
 });
 
-it('rejects an unsupported base map', function () {
+it('rejects an unsupported base map', function (): void {
     DisplayMapAction::make(['basemap' => 'unsupported']);
 })->throws(
     InvalidOption::class,
     "Invalid value provided for 'basemap'. Expected one of 'none', 'traffic', 'bicycling'. Received 'unsupported'."
 );
 
-it('rejects an unsupported layer', function () {
+it('rejects an unsupported layer', function (): void {
     DisplayMapAction::make(['layer' => 'unsupported']);
 })->throws(InvalidOption::class);
